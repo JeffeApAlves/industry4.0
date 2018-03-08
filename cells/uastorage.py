@@ -13,17 +13,23 @@ Classe de abstrata para as celulas
 
 
 from uacell import uaCell
-
 from config import CELL_CONFIG
 from opcua import ua
+from uatcell import uaTCell
+from uatstorage import uaTStorage
 
 class uaStorage(uaCell):
 
-    CONFIG   = CELL_CONFIG(uaCell.STORAGE)
+    CONFIG   = CELL_CONFIG(uaTCell.STORAGE)
+
 
     @staticmethod
-    def create_type(server,idx):
+    def create_type(parent,idx,handle=None):
+        """
+        Cria o tipo storage no server OPC-UA
+        """
 
-        obj_type = uaCell.create_type(server,idx,uaStorage.CONFIG.OBJECT_TYPE)
+        dtype  = uaCell.create(parent,idx)
 
-        return  obj_type
+        return  uaTStorage.create(dtype,idx,handle)
+

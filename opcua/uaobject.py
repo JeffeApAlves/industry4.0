@@ -21,7 +21,6 @@ from contextlib import contextmanager
 
 from opcua import ua
 from opcua import Node
-from opcua import uamethod
 from opcua import instantiate
 from opcua import copy_node
 from opcua.common import ua_utils
@@ -34,9 +33,8 @@ class uaObject(object):
 
     def __init__(self,parent,idx,name_obj):
 
-        self._idx           = str(idx)
-        self._node           = self.__get_node(parent,name_obj)
-
+        self._idx   = str(idx)
+        self._node  = self.__get_node(parent,name_obj)
 
     @property
     def node(self):
@@ -57,6 +55,15 @@ class uaObject(object):
     @property
     def idx(self):
         return self._idx
+
+    def set_value(self,name,value):
+
+        self.__get_child(name).set_value(value)
+
+    def get_value(self,name):
+
+        return self.__get_child(name).get_value()
+
 
     def __get_node(self,parent,name):
         """
@@ -81,12 +88,3 @@ class uaObject(object):
         path = [":".join([self._idx,name])]
 
         self._node.get_child(path)
-
-
-    def set_value(self,name,value):
-
-        self.__get_child(name).set_value(value)
-
-    def get_value(self,name):
-
-        return self.__get_child(name).get_value()

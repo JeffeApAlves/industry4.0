@@ -10,33 +10,32 @@
 Entidade Raspberry
 
 """
-from opcua import ua
+from uatdevice import uaTDevice
 from opcua import uamethod
-
+from uatvision import uaTVision
 from uadevice import uaDevice
 from config import DEVICE_CONFIG
 
 class uaVision(uaDevice):
 
-    _M_CHECK_PART   = "check_part"
-
-    CONFIG      = DEVICE_CONFIG(uaDevice.VISION)
-
+    CONFIG      = DEVICE_CONFIG(uaTDevice.VISION)
 
     @staticmethod
-    def create_type(server,idx):
+    def create_type(parent,idx,handle=None):
+        """
+        Cria o tipo coveyor no server OPC-UA
+        """
 
-        obj_type = uaDevice.create_type(server,idx,uaVision.CONFIG.OBJECT_TYPE)
-    
-        # adiciona as variaveis
-        #obj_type.add_variable(idx, uaVision._V_A,      1.0).set_writable()
+        if handle is None:
+            handle = HandleVision()
 
-        # adiciona os metodos
-        obj_type.add_method(idx,   uaVision._M_CHECK_PART,   uaVision.check_part)
+        dtype  = uaDevice.create_type(parent,idx)
 
-        return  obj_type
+        return  uaTVision.create(dtype,idx,handle)
 
-    @staticmethod
+
+class HandleVision(object):
+
     @uamethod
-    def check_part(parent):
+    def check_part(self,parent):
         return None

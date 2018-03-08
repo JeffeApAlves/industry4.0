@@ -13,17 +13,20 @@ Classe de abstrata para as celulas
 
 
 from uacell import uaCell
-
+from uatcell import uaTCell
+from uatassembly import uaTAssembly
 from config import CELL_CONFIG
-from opcua import ua
 
 class uaAssembly(uaCell):
 
-    CONFIG   = CELL_CONFIG(uaCell.ASSEMBLY)
+    CONFIG   = CELL_CONFIG(uaTCell.ASSEMBLY)
 
     @staticmethod
-    def create_type(server,idx):
+    def create(parent,idx,handle=None):
+        """
+        Cria o tipo assembly no server OPC-UA
+        """
 
-        obj_type = uaCell.create_type(server,idx,uaAssembly.CONFIG.OBJECT_TYPE)
+        dtype  = uaCell.create(parent,idx)
 
-        return  obj_type
+        return  uaTAssembly.create(dtype,idx,handle)

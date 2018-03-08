@@ -15,15 +15,20 @@ Classe de abstrata para as celulas
 from uacell import uaCell
 
 from config import CELL_CONFIG
-from opcua import ua
+from uatcell import uaTCell
+from uatqc import uaTQC
 
 class uaQC(uaCell):
 
-    CONFIG   = CELL_CONFIG(uaCell.QUALITY_CONTROL)
+    CONFIG   = CELL_CONFIG(uaTCell.QUALITY_CONTROL)
+
 
     @staticmethod
-    def create_type(server,idx):
+    def create_type(parent,idx,handle=None):
+        """
+        Cria o tipo qc no server OPC-UA
+        """
 
-        obj_type = uaCell.create_type(server,idx,uaQC.CONFIG.OBJECT_TYPE)
+        dtype  = uaCell.create_type(parent,idx)
 
-        return  obj_type
+        return  uaTQC.create(dtype,idx,handle)

@@ -16,7 +16,8 @@ import getpass
 import subprocess
 import shlex
 from distutils import *
-from factorydevice import FactoryDevice
+from uatdevice import uaTDevice
+from factory import Factory
 from config import DEVICE_CONFIG,OPCUA_SERVER_CONFIG
 
 def deploy_files(devices,servers):
@@ -38,9 +39,13 @@ def deploy_devices():
     #TODO verificar se existe a necessidade fazer deploy de todos os diretorios
     directories = [ name for name in os.listdir(".") if os.path.isdir(os.path.join(".", name)) ]
 
-    for type in FactoryDevice.get_list_types():
 
-        config = FactoryDevice.get_config(type)
+    factory = Factory(uaTDevice)
+
+    for type in factory.get_list_types():
+
+
+        config = factory.get_config(type)
         
         for ip_host in config.DEPLOY:
             cl =  "rsync -rv --include='*.conf' --include='*.sh' --include='*.py' --exclude='*' --prune-empty-dirs {}/ {}@{}:{}".format(config.WORKDIR,getpass.getuser(),ip_host,config.HOMEDIR)

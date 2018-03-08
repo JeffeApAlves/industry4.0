@@ -10,48 +10,42 @@
 Entidade para dispostivos tipo Raspberry
 
 """
-from opcua import ua
-from opcua import uamethod
 
+from uatdevice import uaTDevice
+from opcua import uamethod
+from uatmill import uaTMill
 from uadevice import uaDevice
 from config import DEVICE_CONFIG
 
 class uaMill(uaDevice):
 
 
-    _M_OPEN     = "open_protection"
-    _M_CLOSE    = "close_protection"
-    _M_MAKE_PART= "make_part"
-
-    CONFIG      = DEVICE_CONFIG(uaDevice.MILL)
+    CONFIG      = DEVICE_CONFIG(uaTDevice.MILL)
 
     @staticmethod
-    def create_type(server,idx):
+    def create(parent,idx,handle=None):
+        """
+        Cria o tipo coveyor no server OPC-UA
+        """
 
-        obj_type = uaDevice.create_type(server,idx,uaMill.CONFIG.OBJECT_TYPE)
- 
-        # adiciona as variaveis
-        #obj_type.add_variable(idx, uaMill._V_A,      1.0).set_writable()
+        if handle is None:
+            handle = HandleMill()
 
-        # adiciona os metodos
-        obj_type.add_method(idx,   uaMill._M_OPEN,         uaMill.open_protectio)
-        obj_type.add_method(idx,   uaMill._M_CLOSE,        uaMill.close_protectio)
-        obj_type.add_method(idx,   uaMill._M_MAKE_PART,    uaMill.make_part)
+        dtype  = uaDevice.create(parent,idx)
 
-        return  obj_type
+        return  uaTMill.create(dtype,idx,handle)
 
 
-    @staticmethod
+class HandleMill(object):
+
     @uamethod
-    def open_protectio(parent):
+    def open_protection(self,parent):
         pass
 
-    @staticmethod
     @uamethod
-    def close_protectio(parent):
+    def close_protection(self,parent):
         pass
 
-    @staticmethod
     @uamethod
-    def make_part(parent):
+    def make_part(self,parent):
         return None

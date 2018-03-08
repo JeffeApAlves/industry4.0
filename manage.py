@@ -28,8 +28,9 @@ for dir in dirs:
     
 from uaclient import uaClient
 from uaobject import uaObject
-from factorydevice import FactoryDevice
+from factory import Factory
 from uaserver import uaServer
+from uatdevice import uaTDevice
 from deploy import deploy_files
 
 try:
@@ -41,6 +42,8 @@ except ImportError:
         code.interact(local=dict(globals(), **locals()))
 
 locale.setlocale(locale.LC_ALL, '')
+
+factory_device = Factory(uaTDevice)
 
 @click.group()
 @click.option('-v','--verbose', type =click.Choice(['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']), default='WARNING')
@@ -104,7 +107,7 @@ def read(obj,var,idx):
     uaClient.disconnect()
 
 @cli.command()
-@click.option('--type', type = click.Choice(FactoryDevice.get_list_types()) , default = None)
+@click.option('--type', type = click.Choice(factory_device.get_list_types()) , default = None)
 @click.option('--name', type = click.STRING, default = None)
 @click.option('--idx', type = click.INT, default = 1)
 def device(type,idx,name):
@@ -114,10 +117,8 @@ def device(type,idx,name):
     
     uaClient.connect()
 
-    FactoryDevice.create(idx,name,type)
+    factory_device.create(idx,name,type)
 
-    click.echo("Running: Idx {} Device {} Type {}".format(idx,name,type))    
-    
     input("Press Ctrl+c to stop\n")
 
     uaClient.disconnect()

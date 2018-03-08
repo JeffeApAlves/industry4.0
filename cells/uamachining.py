@@ -2,7 +2,7 @@
 
 """
 
-@file    uaMachining.py
+@file    uamachining.py
 @author  Jefferson Alves
 @date    2018-03-02
 @version 0.1
@@ -15,15 +15,21 @@ Classe de abstrata para as celulas
 from uacell import uaCell
 
 from config import CELL_CONFIG
-from opcua import ua
+from uatcell import uaTCell
+from uatmachining import uaTMachining
 
 class uaMachining(uaCell):
 
-    CONFIG   = CELL_CONFIG(uaCell.MACHINING)
+    CONFIG   = CELL_CONFIG(uaTCell.MACHINING)
+
 
     @staticmethod
-    def create_type(server,idx):
+    def create_type(parent,idx,handle=None):
+        """
+        Cria o tipo machining no server OPC-UA
+        """
 
-        obj_type = uaCell.create_type(server,idx,uaMachining.CONFIG.OBJECT_TYPE)
+        dtype  = uaCell.create_type(parent,idx)
 
-        return  obj_type
+        return  uaTMachining.create(dtype,idx,handle)
+

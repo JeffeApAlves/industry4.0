@@ -10,33 +10,35 @@
 Entidade para dispostivos do tipo BarCodeReader
 
 """
-from opcua import ua
-from opcua import uamethod
 
+from opcua import uamethod
+from uatdevice import uaTDevice
 from uadevice import uaDevice
+from uatbarcodereader import uaTBarCodeReader
 from config import DEVICE_CONFIG
 
 class uaBarCodeReader(uaDevice):
 
-    _M_READ_BARCODE     = "read_barcode"
+    CONFIG      = DEVICE_CONFIG(uaTDevice.BAR_CODE_READER)
 
-
-    CONFIG      = DEVICE_CONFIG(uaDevice.BAR_CODE_READER)
 
     @staticmethod
-    def create_type(server,idx):
+    def create(parent,idx,handle=None):
+        """
+        Cria o tipo device no server OPC-UA
+        """
 
-        obj_type = uaDevice.create_type(server,idx,uaBarCodeReader.CONFIG.OBJECT_TYPE)
-    
-        # adiciona as variaveis
-        #obj_type.add_variable(idx, uaBarCodeReader._V_A,      1.0).set_writable()
+        if handle is None:
+            handle = HandleBarCodeReader()
 
-        # adiciona os metodos
-        obj_type.add_method(idx,   uaBarCodeReader._M_READ_BARCODE,   uaBarCodeReader.read_barcode)
+        dtype  = uaDevice.create(parent,idx)
 
-        return  obj_type
+        return  uaTBarCodeReader.create(dtype,idx,handle)
 
-    @staticmethod
+
+class HandleBarCodeReader(object):
+
+
     @uamethod
-    def read_barcode(parent):
-        return None
+    def read_barcode(self,parent):
+        pass

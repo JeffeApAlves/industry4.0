@@ -10,37 +10,39 @@
 Entidade do dispositivo Coveyor
 
 """
-from opcua import ua
 from opcua import uamethod
 
+from uatdevice import uaTDevice
 from uadevice import uaDevice
+from uatcoveyor import uaTCoveyor
 from config import DEVICE_CONFIG
 
 class uaCoveyor(uaDevice):
 
-    # metodos
-    _M_ON       = "on"
-    _M_OFF      = "off"
 
-    CONFIG          = DEVICE_CONFIG(uaDevice.COVEYOR)
+    CONFIG          = DEVICE_CONFIG(uaTDevice.COVEYOR)
+
 
     @staticmethod
-    def create_type(server,idx):
+    def create(parent,idx,handle=None):
+        """
+        Cria o tipo coveyor no server OPC-UA
+        """
 
-        obj_type = uaDevice.create_type(server,idx,uaCoveyor.CONFIG.OBJECT_TYPE)
- 
-        # adiciona os metodos
-        obj_type.add_method(idx,   uaCoveyor._M_ON,     uaCoveyor.on)
-        obj_type.add_method(idx,   uaCoveyor._M_OFF,    uaCoveyor.off)
+        if handle is None:
+            handle = HandleCoveyor()
 
-        return  obj_type
+        dtype  = uaDevice.create(parent,idx)
 
-    @staticmethod
+        return  uaTCoveyor.create(dtype,idx,handle)
+
+
+class HandleCoveyor(object):
+    
     @uamethod
-    def on(parent):
+    def on(self,parent):
         pass
 
-    @staticmethod
     @uamethod
-    def off(parent):
+    def off(self,parent):
         pass

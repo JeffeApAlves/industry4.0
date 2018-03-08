@@ -13,17 +13,16 @@ Classe de abstrata para locais do tipo buffer
 
 
 from uaplace import uaPlace
-
+from uatplace import uaTPlace
 from config import PLACE_CONFIG
-from opcua import ua
 
 class uaBuffer(uaPlace):
 
-    CONFIG   = PLACE_CONFIG(uaPlace.BUFFER)
+    CONFIG   = PLACE_CONFIG(uaTPlace.BUFFER)
 
     @staticmethod
-    def create_type(server,idx):
+    def create(parent,idx):
 
-        obj_type = uaPlace.create_type(server,idx,uaBuffer.CONFIG.OBJECT_TYPE)
+        obj_type = uaPlace.create(parent,idx)
 
         return  obj_type

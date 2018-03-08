@@ -44,6 +44,26 @@ class CONFIG(object):
     # diretorio com o processo de inicialização
     STARTUPDIR  = "/".join([WORKDIR,"startup"])
 
+    @staticmethod
+    def get_map_class():
+        """
+        Retorna um dicionarios com os tipos usado no arquivo conf e sua respectiva class
+        """
+
+        sections = ['devices','places','cells']
+
+        out = {}
+
+        for s in sections:
+
+            itens = list(CONFIG.configuration[s].keys())
+
+            for i in itens:
+
+                out[i] = CONFIG.configuration[s][i]['py-obj']
+
+        return  out
+
 
 class OPCUA_SERVER_CONFIG(CONFIG):
     '''
@@ -67,7 +87,7 @@ class OPCUA_SERVER_CONFIG(CONFIG):
 
 class DEVICE_CONFIG(CONFIG):
     '''
-    Configurações dos dispositivos 
+    Configurações relacionadas aos dispositivos 
     '''
 
     # tipos de dispositivos da rede
@@ -76,13 +96,24 @@ class DEVICE_CONFIG(CONFIG):
     def __init__(self,name_device):
         self.__name_device = name_device
 
+
+
+    @property
+    def PY_OBJ(self):
+        return CONFIG.configuration['devices'][self.__name_device]['py-obj']
+
+    @property
+    def PY_TYPE(self):
+        return CONFIG.configuration['devices'][self.__name_device]['py-type']
+
+
     @property
     def HOMEDIR(self):
         return CONFIG.configuration['devices'][self.__name_device]['homedir']
 
     @property
-    def OBJECT_TYPE(self):
-        return CONFIG.configuration['devices'][self.__name_device]['type']
+    def UA_TYPE(self):
+        return CONFIG.configuration['devices'][self.__name_device]['ua-type']
 
     @property
     def OBJECTS(self):
@@ -102,10 +133,9 @@ class DEVICE_CONFIG(CONFIG):
 
         return deploys
 
-
 class CELL_CONFIG(CONFIG):
     '''
-    Configurações das celulas 
+    Configurações relacionadas as celulas 
     '''
 
     # celulas de montagemm
@@ -115,9 +145,19 @@ class CELL_CONFIG(CONFIG):
         self.__name_device = name_device
 
 
+
     @property
-    def OBJECT_TYPE(self):
-        return CONFIG.configuration['cells'][self.__name_device]['type']
+    def PY_OBJ(self):
+        return CONFIG.configuration['cells'][self.__name_device]['py-obj']
+
+    @property
+    def PY_TYPE(self):
+        return CONFIG.configuration['cells'][self.__name_device]['py-type']
+
+
+    @property
+    def UA_TYPE(self):
+        return CONFIG.configuration['cells'][self.__name_device]['ua-type']
 
     @property
     def OBJECTS(self):
@@ -128,11 +168,9 @@ class CELL_CONFIG(CONFIG):
 
         return objects
 
-
-
 class PLACE_CONFIG(CONFIG):
     '''
-    Configurações das celulas 
+    Configurações relacionadas aos locais 
     '''
 
     # celulas de montagemm
@@ -142,9 +180,18 @@ class PLACE_CONFIG(CONFIG):
         self.__name_device = name_device
 
 
+
     @property
-    def OBJECT_TYPE(self):
-        return CONFIG.configuration['places'][self.__name_device]['type']
+    def PY_OBJ(self):
+        return CONFIG.configuration['places'][self.__name_device]['py-obj']
+
+    @property
+    def PY_TYPE(self):
+        return CONFIG.configuration['places'][self.__name_device]['py-type']
+
+    @property
+    def UA_TYPE(self):
+        return CONFIG.configuration['places'][self.__name_device]['ua-type']
 
     @property
     def OBJECTS(self):

@@ -27,18 +27,27 @@ class uaClient(object):
         '''
 
         try:
-            # Rntidade client
-            uaClient.__CLIENT = Client(OPCUA_SERVER_CONFIG.URL)
 
-            # Conectando ...
-            uaClient.__CLIENT.connect()
+            if uaClient.__CLIENT is None:
 
-            logger.info("Conectado ao servidor OPC-UARoot: {}\nChildren {}".format(uaClient.get_root_node(),uaClient.get_root_node().get_children()))
+                # Rntidade client
+                uaClient.__CLIENT = Client(OPCUA_SERVER_CONFIG.URL)
+
+                # Conectando ...
+                uaClient.__CLIENT.connect()
+
+                logger.info("Conectado ao servidor OPC-UARoot: {}\nChildren {}".format(uaClient.get_root_node(),uaClient.get_root_node().get_children()))
 
         except :
             logger.error("Erro ao tentar conectar no servidor opcua {} !".format(OPCUA_SERVER_CONFIG.HOST))
             uaClient.__CLIENT.disconnect()
+            uaClient.__CLIENT = None
 
+        return uaClient.__CLIENT
+
+    @staticmethod
+    def get_client():
+        return uaClient.__CLIENT
 
     @staticmethod
     def disconnect():

@@ -11,58 +11,50 @@ Entidade Robot
 
 """
 
-from opcua import ua
 from opcua import uamethod
-
+from uatdevice import uaTDevice
 from uadevice import uaDevice
+from uatrobot import uaTRobot
 from config import DEVICE_CONFIG
 
 
 class uaRobot(uaDevice):
 
-    _M_MOVE        = "move"
-    _M_EXECUTE     = "execute"
-    _M_HOME        = "home"
-    _M_GET_PART    = "get_part"
-    _M_PUT_PART    = "put_part"
+    CONFIG         = DEVICE_CONFIG(uaTDevice.ROBOT)
 
-    CONFIG         = DEVICE_CONFIG(uaDevice.ROBOT)
 
     @staticmethod
-    def create_type(server,idx):
+    def create(parent,idx,handle=None):
+        """
+        Cria o tipo robot no server OPC-UA
+        """
 
-        obj_type = uaDevice.create_type(server,idx,uaRobot.CONFIG.OBJECT_TYPE)
+        if handle is None:
+            handle = HandleRobot()
 
-        # adiciona os metodos
-        obj_type.add_method(idx,   uaRobot._M_HOME,    uaRobot.home)
-        obj_type.add_method(idx,   uaRobot._M_MOVE,    uaRobot.move,    [ua.VariantType.Float,ua.VariantType.Float,ua.VariantType.Float])
-        obj_type.add_method(idx,   uaRobot._M_EXECUTE, uaRobot.execute, [ua.VariantType.String,ua.VariantType.String])
-        obj_type.add_method(idx,   uaRobot._M_GET_PART,uaRobot.get_part,[ua.VariantType.UInt16])
-        obj_type.add_method(idx,   uaRobot._M_PUT_PART,uaRobot.put_part,[ua.VariantType.UInt16])
+        dtype  = uaDevice.create(parent,idx)
 
-        return  obj_type
+        return  uaTRobot.create(dtype,idx,handle)
 
-    @staticmethod
+
+class HandleRobot(object):
+
     @uamethod
-    def move(parent):
+    def move(self,parent):
         pass
 
-    @staticmethod
     @uamethod
-    def execute(parent,format,program):
+    def execute(self,parent,format,program):
         pass
 
-    @staticmethod
     @uamethod
-    def home(parent):
+    def home(self,parent):
         pass
 
-    @staticmethod
     @uamethod
-    def get_part(parent,id):
+    def get_part(self,parent,id):
         pass
 
-    @staticmethod
     @uamethod
-    def put_part(parent,id):
+    def put_part(self,parent,id):
         pass

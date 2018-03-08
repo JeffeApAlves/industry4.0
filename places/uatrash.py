@@ -13,17 +13,16 @@ Classe de abstrata para locias do tipo trash
 
 
 from uaplace import uaPlace
-
+from uatplace import uaTPlace
 from config import PLACE_CONFIG
-from opcua import ua
 
 class uaTrash(uaPlace):
 
-    CONFIG   = PLACE_CONFIG(uaPlace.TRASH)
+    CONFIG   = PLACE_CONFIG(uaTPlace.TRASH)
 
     @staticmethod
-    def create_type(server,idx):
+    def create(parent,idx):
 
-        obj_type = uaPlace.create_type(server,idx,uaTrash.CONFIG.OBJECT_TYPE)
+        obj_type = uaPlace.create(parent,idx)
 
         return  obj_type

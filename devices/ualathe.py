@@ -10,46 +10,40 @@
 Entidade para dispostivos tipo Raspberry
 
 """
-from opcua import ua
 from opcua import uamethod
-
+from uatdevice import uaTDevice
 from uadevice import uaDevice
+from uatlathe import uaTLathe
 from config import DEVICE_CONFIG
 
 class uaLathe(uaDevice):
 
-    _M_OPEN     = "open_protection"
-    _M_CLOSE    = "close_protection"
-    _M_MAKE_PART= "make_part"
-
-    CONFIG      = DEVICE_CONFIG(uaDevice.LATHE)
+    CONFIG      = DEVICE_CONFIG(uaTDevice.LATHE)
 
     @staticmethod
-    def create_type(server,idx):
+    def create(parent,idx,handle=None):
+        """
+        Cria o tipo coveyor no server OPC-UA
+        """
 
-        obj_type = uaDevice.create_type(server,idx,uaLathe.CONFIG.OBJECT_TYPE)
- 
-        # adiciona as variaveis
-        #obj_type.add_variable(idx, uaLathe._V_A,      1.0).set_writable()
+        if handle is None:
+            handle = HandleLathe()
 
-        # adiciona os metodos
-        obj_type.add_method(idx,   uaLathe._M_OPEN,         uaLathe.open_protectio)
-        obj_type.add_method(idx,   uaLathe._M_CLOSE,        uaLathe.close_protectio)
-        obj_type.add_method(idx,   uaLathe._M_MAKE_PART,    uaLathe.make_part)
+        dtype  = uaDevice.create(parent,idx)
 
-        return  obj_type
+        return  uaTLathe.create(dtype,idx,handle)
 
-    @staticmethod
+
+class HandleLathe(object):
+
     @uamethod
-    def open_protectio(parent):
+    def open_protection(self,parent):
         pass
 
-    @staticmethod
     @uamethod
-    def close_protectio(parent):
+    def close_protection(self,parent):
         pass
 
-    @staticmethod
     @uamethod
-    def make_part(parent):
+    def make_part(self,parent):
         return None
