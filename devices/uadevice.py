@@ -11,12 +11,18 @@ Classe generalistas dos dispositivos
 
 """
 
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
+
 from opcua import uamethod
-from uaobject import uaObject
-from config import DEVICE_CONFIG
+
+from opc.uaobject import uaObject
+from startup.config import DEVICE_CONFIG
 from workerdevice import WorkerDevice
 from uatdevice import uaTDevice
-from log import logger
+from misc.log import logger
 
 class uaDevice(uaObject):
 

@@ -1,7 +1,26 @@
+#!/usr/bin/env python
+
+"""
+
+@file    uaserver.py
+@author  Jefferson Alves
+@date    2018-03-02
+@version 0.1
+
+Classe de abstrata para os locais
+
+"""
+
+
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
 from opcua import Server
-from config import OPCUA_SERVER_CONFIG
-from model import uaModel
-from log import logger
+from startup.config import OPCUA_SERVER_CONFIG
+from server.model import uaModel
+from misc.log import logger
 
 class uaServer(object):
 

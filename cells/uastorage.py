@@ -12,11 +12,13 @@ Classe de abstrata para as celulas
 """
 
 
-from uacell import uaCell
-from config import CELL_CONFIG
 from opcua import ua
+
+from uacell import uaCell
 from uatcell import uaTCell
 from uatstorage import uaTStorage
+
+from startup.config import CELL_CONFIG
 
 class uaStorage(uaCell):
 

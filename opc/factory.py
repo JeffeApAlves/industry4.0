@@ -7,16 +7,21 @@
 @date    2018-03-02
 @version 0.1
 
-Fabrica de dispositivos
+Fabrica de objetos
 
 """
 
-from uatcell import uaTCell
-from uatplace import uaTPlace
-from uatdevice import uaTDevice
-from mapclass import MapClass
-from config import CONFIG
-from log import logger
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
+from cells.uatcell import uaTCell
+from places.uatplace import uaTPlace
+from devices.uatdevice import uaTDevice
+from opc.mapclass import MapClass
+from startup.config import CONFIG
+from misc.log import logger
 
 class Factory(object):
 

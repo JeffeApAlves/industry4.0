@@ -10,9 +10,14 @@
 Thread para dispositivos
 """
 
+import os,sys
 import time
 from threading import Thread
-from log import logger
+
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+from misc.log import logger
 
 
 class WorkerDevice(Thread):

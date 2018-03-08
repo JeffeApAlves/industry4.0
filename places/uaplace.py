@@ -11,10 +11,15 @@ Classe de abstrata para os locais
 
 """
 
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
+
 from opcua import ua
-from uaobject import uaObject
+from opc.uaobject import uaObject
 from uatplace import uaTPlace
-from config import PLACE_CONFIG
+from startup.config import PLACE_CONFIG
 
 class uaPlace(uaObject):
 

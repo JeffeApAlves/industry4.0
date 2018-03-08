@@ -11,7 +11,6 @@ Entrada do CL
 
 """
 
-
 import sys
 import os
 import locale
@@ -20,18 +19,15 @@ import logging
 import time
 from distutils import *
 
-# inclui os subdiretórios
-dirs = [ name for name in os.listdir(".") if os.path.isdir(os.path.join(".", name)) ]
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 
-for dir in dirs:
-    sys.path.insert(0, "./{}".format(dir))
     
-from uaclient import uaClient
-from uaobject import uaObject
-from factory import Factory
-from uaserver import uaServer
-from uatdevice import uaTDevice
-from deploy import deploy_files
+from client.uaclient import uaClient
+from opc.uaobject import uaObject
+from opc.factory import Factory
+from server.uaserver import uaServer
+from devices.uatdevice import uaTDevice
+from misc.deploy import deploy_files
 
 try:
     from IPython import embed

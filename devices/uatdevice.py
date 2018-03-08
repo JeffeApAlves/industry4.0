@@ -9,10 +9,16 @@
 
 """
 
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
 from opcua import ua
-from log import logger
-from uatype import uaType
-from config import DEVICE_CONFIG
+
+from misc.log import logger
+from opc.uatype import uaType
+from startup.config import DEVICE_CONFIG
 
 class uaTDevice(uaType):
 

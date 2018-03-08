@@ -9,11 +9,17 @@
 
 """
 
+import os,sys
+
 from opcua import ua
-from uatype import uaType
-from log import logger
-from uatype import uaType
-from config import PLACE_CONFIG
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
+from opc.uatype import uaType
+from misc.log import logger
+from opc.uatype import uaType
+from startup.config import PLACE_CONFIG
 
 class uaTPlace(uaType):
 

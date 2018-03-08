@@ -11,16 +11,22 @@ Entidade Raspberry
 
 """
 
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
+
 from opcua import uamethod
 
 from uatdevice import uaTDevice
 from uatraspberry import uaTRaspBerry
 from uadevice import uaDevice
-from uaobject import uaObject
-from config import DEVICE_CONFIG
-from tlmsys import TlmSyS
-from net import get_ip_address
-from log import logger
+from opc.uaobject import uaObject
+from startup.config import DEVICE_CONFIG
+from raspberry.tlmsys import TlmSyS
+from misc.log import logger
+from misc.net import get_ip_address
 
 # telemetria raspberry
 tlmsys  = TlmSyS()

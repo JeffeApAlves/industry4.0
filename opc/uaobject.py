@@ -11,6 +11,9 @@ Abstrção de um objeto do opcua
 
 """
 
+import os
+import sys
+
 from concurrent.futures import Future, TimeoutError
 import time
 from datetime import datetime
@@ -26,8 +29,11 @@ from opcua import copy_node
 from opcua.common import ua_utils
 from opcua.common.methods import call_method_full
 
-from uaclient import uaClient
-from log import logger
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+from client.uaclient import uaClient
+from misc.log import logger
 
 class uaObject(object):
 

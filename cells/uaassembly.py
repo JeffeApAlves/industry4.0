@@ -11,11 +11,15 @@ Classe de abstrata para as celulas
 
 """
 
+import os,sys
 
-from uacell import uaCell
-from uatcell import uaTCell
-from uatassembly import uaTAssembly
-from config import CELL_CONFIG
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
+from cells.uacell import uaCell
+from cells.uatcell import uaTCell
+from cells.uatassembly import uaTAssembly
+from startup.config import CELL_CONFIG
 
 class uaAssembly(uaCell):
 

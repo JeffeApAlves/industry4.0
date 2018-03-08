@@ -10,12 +10,16 @@
 Entidade para dispostivos do tipo BarCodeReader
 
 """
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
 
 from opcua import uamethod
 from uatdevice import uaTDevice
 from uadevice import uaDevice
 from uatbarcodereader import uaTBarCodeReader
-from config import DEVICE_CONFIG
+from startup.config import DEVICE_CONFIG
 
 class uaBarCodeReader(uaDevice):
 

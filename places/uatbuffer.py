@@ -9,10 +9,14 @@
 
 """
 
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
 from opcua import ua
-from log import logger
+from misc.log import logger
 from uatplace import uaTPlace
-from config import PLACE_CONFIG
+from startup.config import PLACE_CONFIG
 
 class uaTBuffer(uaTPlace):
 

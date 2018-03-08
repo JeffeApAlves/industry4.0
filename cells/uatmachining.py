@@ -9,10 +9,17 @@
 
 """
 
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+#sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
+
+
 from opcua import ua
-from log import logger
-from uatcell import uaTCell
-from config import CELL_CONFIG
+
+from misc.log import logger
+from cells.uatcell import uaTCell
+from startup.config import CELL_CONFIG
 
 class uaTMachining(uaTCell):
 

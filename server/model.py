@@ -1,9 +1,26 @@
+#!/usr/bin/env python
+
+"""
+
+@file    model.py
+@author  Jefferson Alves
+@date    2018-03-02
+@version 0.1
+
+Classe de abstrata para os locais
+
+"""
+
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
 from opcua import ua
-from uatdevice import uaTDevice
-from uatcell import uaTCell
-from uatplace import uaTPlace
-from factory import Factory
-from log import logger
+from devices.uatdevice import uaTDevice
+from cells.uatcell import uaTCell
+from places.uatplace import uaTPlace
+from opc.factory import Factory
+from misc.log import logger
 
 class uaModel(object):
 

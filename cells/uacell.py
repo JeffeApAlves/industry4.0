@@ -11,9 +11,15 @@ Classe de abstrata para as celulas
 
 """
 
-from uaobject import uaObject
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
+
+
 from uatcell import uaTCell
-from config import CELL_CONFIG
+from opc.uaobject import uaObject
+from startup.config import CELL_CONFIG
 
 class uaCell(uaObject):
 

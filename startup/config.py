@@ -11,13 +11,18 @@ Carrega as configurações do arquivo
 
 """
 
+
+
 import getpass
 import os
 import json
 import os.path
 import sys
 from distutils import *
-from log import logger
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+from misc.log import logger
 
 
 class CONFIG(object):

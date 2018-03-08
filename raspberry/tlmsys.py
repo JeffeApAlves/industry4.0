@@ -11,10 +11,15 @@ Carrega as configurações do arquivo
 
 """
 
-import os
+
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
 import psutil
 import shlex
-from log import logger
+from misc.log import logger
 
 #from sense_emu import SenseHat
 from subprocess import PIPE, Popen

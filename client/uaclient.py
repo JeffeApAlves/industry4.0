@@ -11,10 +11,15 @@ Conexão com  o servidor OPC
 
 """
 
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
 from opcua import Client
 from opcua import ua
-from config import OPCUA_SERVER_CONFIG
-from log import logger
+from startup.config import OPCUA_SERVER_CONFIG
+from misc.log import logger
 
 class uaClient(object):
 

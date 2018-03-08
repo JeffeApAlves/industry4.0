@@ -10,11 +10,17 @@
 Entidade Raspberry
 
 """
+
+import os,sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
 from uatdevice import uaTDevice
 from opcua import uamethod
 from uatvision import uaTVision
 from uadevice import uaDevice
-from config import DEVICE_CONFIG
+from startup.config import DEVICE_CONFIG
 
 class uaVision(uaDevice):
 

@@ -11,14 +11,25 @@ Baseado no ip existem no arquivo .conf copia os arquivos para cada host
 
 """
 
-import os
+
+import os,sys
 import getpass
 import subprocess
 import shlex
 from distutils import *
-from uatdevice import uaTDevice
-from factory import Factory
-from config import DEVICE_CONFIG,OPCUA_SERVER_CONFIG
+
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+# inclui os subdiretórios
+#dirs = [ name for name in os.listdir(".") if os.path.isdir(os.path.join(".", name)) ]
+
+#for dir in dirs:
+#    sys.path.insert(0, "./{}".format(dir))
+
+
+from devices.uatdevice import uaTDevice
+from opc.factory import Factory
+from startup.config import DEVICE_CONFIG,OPCUA_SERVER_CONFIG
 
 def deploy_files(devices,servers):
     """
