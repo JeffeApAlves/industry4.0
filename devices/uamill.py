@@ -20,13 +20,19 @@ from opcua import uamethod
 from uatdevice import uaTDevice
 from uatmill import uaTMill
 from uadevice import uaDevice
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 
 class uaMill(uaDevice):
 
 
     CONFIG      = DEVICE_CONFIG(uaTDevice.MILL)
 
+
+    def __init__(self,idx,name):
+
+        super().__init__(None,idx,name)
+        
+        
     @staticmethod
     def create(parent,idx,handle=None):
         """

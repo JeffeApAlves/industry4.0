@@ -22,7 +22,10 @@ def get_ip_address(ifname):
     Cabo:   ifname = eth0
     """
 
-    ni.ifaddresses(ifname)
-    ip = ni.ifaddresses(ifname)[ni.AF_INET][0]['addr']
-
+    try:
+        ni.ifaddresses(ifname)
+        ip = ni.ifaddresses(ifname)[ni.AF_INET][0]['addr']
+    except:
+        ip = "0.0.0.0"
+        
     return ip

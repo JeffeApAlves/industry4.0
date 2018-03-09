@@ -12,6 +12,7 @@ Fabrica de objetos
 """
 
 import os,sys
+import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
@@ -20,8 +21,9 @@ from cells.uatcell import uaTCell
 from places.uatplace import uaTPlace
 from devices.uatdevice import uaTDevice
 from opc.mapclass import MapClass
-from startup.config import CONFIG
-from misc.log import logger
+from opc.events import Events
+from config.config import CONFIG
+
 
 class Factory(object):
 
@@ -33,11 +35,15 @@ class Factory(object):
     3. Implemetar as classes do novo tipo uaTXXX (create_methods,create_pro,create) e uaXXX (init,create_type)
     """
 
+
     def __init__(self,type):
+
+    
+        self.logger = logging.getLogger(__name__)
+
 
         # Lista com os tipos
         self.__Type = type 
-
 
     def get_list_types(self):
         """
@@ -88,13 +94,21 @@ class Factory(object):
         Cria um objeto python de um dispositivo do tipo <type> com o nome <name> e vincula com o objeto correspondente no OPC-UA
         """
 
+
         try:
-            obj_class   = self.get_obj_class(type)
-            py_obj         = obj_class(idx,name)
-            logger.info("Dispositivo {} criado".format(name))    
-        except:
+
+            class_of_obj= self.get_obj_class(type)
+
+            # instancia o objeto
+            py_obj      = class_of_obj(idx,name)
+
+            Events.create_data_change_events(idx,py_obj)
+            
+            self.logger.info("Sucesso Dispositivo {} criado class {}".format(name,class_of_obj))    
+
+        except IOError as e:
             py_obj = None
-            logger.warn("Não foi possível criar o dispositivo {}".format(name))
+            self.logger.warn("Não foi possível criar o dispositivo {}\nI/O error({0}): {1}".format(name,e.errno, e.strerror))
 
         return  py_obj
 
@@ -107,10 +121,10 @@ class Factory(object):
         try:
             obj_class   = self.get_obj_class(type)
             ua_obj      = obj_class.create(parent,idx)
-            logger.info("Sucesso : Parent {} - Tipo {}  Objeto  {} chield {}".format(parent,type,obj_class,ua_obj))    
+            self.logger.info("Sucesso : Parent {} - Tipo {}  Objeto  {} chield {}".format(parent,type,obj_class,ua_obj))    
         except:
 
             ua_obj = None
-            logger.warn("Não foi possível criar  : Parent {} - Tipo {} class {} chield {}".format(parent,type,obj_class,ua_obj))    
+            self.logger.warn("Não foi possível criar  : Parent {} - Tipo {} class {} chield {}".format(parent,type,obj_class,ua_obj))    
 
         return ua_obj

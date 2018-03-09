@@ -12,7 +12,7 @@ Fabrica de celulas
 """
 
 import os,sys
-
+import logging
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 
@@ -55,12 +55,14 @@ from uatbuffer import uaTBuffer
 from uattrash import uaTTrash
 
 
-from startup.config import CONFIG
-from misc.log import logger
+from config.config import CONFIG
+
+
+
+logger = logging.getLogger(__name__)
+
 
 class MapClass(object):
-
-
 
     @staticmethod
     def get_config(type):

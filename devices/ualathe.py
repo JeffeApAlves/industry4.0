@@ -19,12 +19,18 @@ from opcua import uamethod
 from uatdevice import uaTDevice
 from uadevice import uaDevice
 from uatlathe import uaTLathe
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 
 class uaLathe(uaDevice):
 
     CONFIG      = DEVICE_CONFIG(uaTDevice.LATHE)
 
+
+    def __init__(self,idx,name):
+
+        super().__init__(None,idx,name)
+        
+        
     @staticmethod
     def create(parent,idx,handle=None):
         """

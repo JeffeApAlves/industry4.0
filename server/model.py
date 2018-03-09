@@ -12,17 +12,22 @@ Classe de abstrata para os locais
 """
 
 import os,sys
+import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 
 from opcua import ua
 from devices.uatdevice import uaTDevice
 from cells.uatcell import uaTCell
 from places.uatplace import uaTPlace
 from opc.factory import Factory
-from misc.log import logger
+
+
+logger = logging.getLogger(__name__)
 
 class uaModel(object):
+
 
     @staticmethod
     def create(server,idx):
@@ -47,7 +52,7 @@ class uaModel(object):
 
         # node de objetos no opcua
         objects = server.get_objects_node()
-        uatypes = server.get_node(ua.ObjectIds.BaseObjectType)
+        uatypes = server.get_base_objectType_node()
         types   = factory.get_list_types()
 
 

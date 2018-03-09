@@ -17,8 +17,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 from opcua import ua
 
 from uadevice import uaTDevice
-from startup.config import DEVICE_CONFIG
-from misc.log import logger
+from config.config import DEVICE_CONFIG
 
 
 class uaTRaspBerry(uaTDevice):
@@ -69,19 +68,4 @@ class uaTRaspBerry(uaTDevice):
         obj_type.add_method(idx,   uaTRaspBerry.mRESET,         handle.shutdown)
     
         return obj_type
-
-
-
-    @staticmethod
-    def create_event(temperature,handle):
-        pass
-
-#        client  = uaClient.get_client()
-#        root    = uaClient.get_root_node()
-#
-#        event   = root.get_child(["0:Types", "0:EventTypes", "0:BaseEventType", "2:MyFirstEvent"])
-#
-#        sub                         = client.create_subscription(100, SubHandlerTemperature())
-#        self._handle_temperatura    = sub.subscribe_events(temperature.node, event)
-
 

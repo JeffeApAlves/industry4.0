@@ -18,7 +18,7 @@ from uacell import uaCell
 from uatcell import uaTCell
 from uatstorage import uaTStorage
 
-from startup.config import CELL_CONFIG
+from config.config import CELL_CONFIG
 
 class uaStorage(uaCell):
 

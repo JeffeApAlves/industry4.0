@@ -11,19 +11,22 @@ Conexão com  o servidor OPC
 
 """
 
-import sys
-import os
+import sys,os
+import logging
+
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 
 from opcua import Client
 from opcua import ua
-from startup.config import OPCUA_SERVER_CONFIG
-from misc.log import logger
+from config.config import OPCUA_SERVER_CONFIG
+
+logger = logging.getLogger(__name__)
 
 class uaClient(object):
 
     __CLIENT    = None
+
 
     @staticmethod
     def connect():
@@ -78,3 +81,17 @@ class uaClient(object):
         """
 
         return uaClient.__CLIENT.get_objects_node()
+
+
+    @ staticmethod
+    def subscribe_event(src_nodeid,priority,handler):
+
+        try:
+
+            sub = uaClient.__CLIENT.create_subscription(priority, handler)
+
+            sub.subscribe_data_change(src_nodeid)
+
+        except IOError as e:
+            logger.warn("Não foi possível inscrever o evento\nI/O error({0}): {1}".format(e.errno, e.strerror))
+        

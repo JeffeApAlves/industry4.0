@@ -13,16 +13,11 @@ Carrega as configurações do arquivo
 
 
 import os,sys
-
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-
-
+import logging
 import psutil
 import shlex
-from misc.log import logger
-
-#from sense_emu import SenseHat
 from subprocess import PIPE, Popen
+
 
 class TlmSyS (object):
     """
@@ -30,6 +25,11 @@ class TlmSyS (object):
     """
 
     #sense = SenseHat()
+
+    def __init__(self):
+
+        self.logger = logging.getLogger(__name__)
+
 
     @property
     def temperature(self):
@@ -44,7 +44,7 @@ class TlmSyS (object):
             val = output[output.index("=") + 1:output.rindex("'")]
 
         except:
-            logger.error("Não foi possível efetuar a leitura da temperatura")
+            self.logger.error("Não foi possível efetuar a leitura da temperatura")
 
 
         return float(val)

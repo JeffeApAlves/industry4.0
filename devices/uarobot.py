@@ -21,7 +21,7 @@ from opcua import uamethod
 from uatdevice import uaTDevice
 from uadevice import uaDevice
 from uatrobot import uaTRobot
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 
 
 class uaRobot(uaDevice):
@@ -29,6 +29,12 @@ class uaRobot(uaDevice):
     CONFIG         = DEVICE_CONFIG(uaTDevice.ROBOT)
 
 
+
+    def __init__(self,idx,name):
+
+        super().__init__(None,idx,name)
+        
+        
     @staticmethod
     def create(parent,idx,handle=None):
         """
@@ -36,14 +42,19 @@ class uaRobot(uaDevice):
         """
 
         if handle is None:
-            handle = HandleRobot()
+            handle = HandleMethods()
 
         dtype  = uaDevice.create(parent,idx)
 
         return  uaTRobot.create(dtype,idx,handle)
 
 
-class HandleRobot(object):
+    def get_SubHandler(self):
+
+        return SubHandler()
+
+
+class HandleMethods(object):
 
     @uamethod
     def move(self,parent):
@@ -64,3 +75,13 @@ class HandleRobot(object):
     @uamethod
     def put_part(self,parent,id):
         pass
+
+
+class SubHandler(object):
+
+    def datachange_notification(self, node, val, data):
+        print("New data change event", node, val, data)
+
+    def event_notification(self, event):
+        print("New event", event)
+

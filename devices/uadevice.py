@@ -12,6 +12,7 @@ Classe generalistas dos dispositivos
 """
 
 import os,sys
+import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
@@ -19,10 +20,9 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 from opcua import uamethod
 
 from opc.uaobject import uaObject
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 from workerdevice import WorkerDevice
 from uatdevice import uaTDevice
-from misc.log import logger
 
 class uaDevice(uaObject):
 
@@ -32,10 +32,13 @@ class uaDevice(uaObject):
 
         super().__init__(parent,idx,name)
 
-        self._host      = uaObject(self.node,idx,uaDevice._P_HOST)
-        self._version   = uaObject(self.node,idx,uaDevice._P_VERSION)
-        self._model     = uaObject(self.node,idx,uaDevice._P_MODEL)
-        self._sn        = uaObject(self.node,idx,uaDevice._P_SN)
+        self.logger = logging.getLogger(__name__)
+
+
+        self._host      = uaObject(self.node,idx,uaTDevice.pHOST)
+        self._version   = uaObject(self.node,idx,uaTDevice.pVERSION)
+        self._model     = uaObject(self.node,idx,uaTDevice.pMODEL)
+        self._sn        = uaObject(self.node,idx,uaTDevice.pSN)
 
         # cria o worker para o dispositivo
         WorkerDevice(self)
@@ -50,7 +53,7 @@ class uaDevice(uaObject):
 
     @property
     def host(self):
-        return self._temperature.value
+        return self._host.value
 
     @host.setter
     def host(self, value):
@@ -65,7 +68,7 @@ class uaDevice(uaObject):
         self._version.value = value
 
     def start_task(self):
-        logger.warn("Worker não implementado")
+        self.logger.warn("Worker não implementado")
 
     def loop_task(self):
         pass

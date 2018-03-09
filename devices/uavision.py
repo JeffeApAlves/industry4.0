@@ -20,7 +20,7 @@ from uatdevice import uaTDevice
 from opcua import uamethod
 from uatvision import uaTVision
 from uadevice import uaDevice
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 
 class uaVision(uaDevice):
 

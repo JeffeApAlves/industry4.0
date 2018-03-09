@@ -29,7 +29,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from devices.uatdevice import uaTDevice
 from opc.factory import Factory
-from startup.config import DEVICE_CONFIG,OPCUA_SERVER_CONFIG
+from config.config import DEVICE_CONFIG,OPCUA_SERVER_CONFIG
 
 def deploy_files(devices,servers):
     """
@@ -59,7 +59,8 @@ def deploy_devices():
         config = factory.get_config(type)
         
         for ip_host in config.DEPLOY:
-            cl =  "rsync -rv --include='*.conf' --include='*.sh' --include='*.py' --exclude='*' --prune-empty-dirs {}/ {}@{}:{}".format(config.WORKDIR,getpass.getuser(),ip_host,config.HOMEDIR)
+            print(config.HOMEDIR)
+            cl =  "rsync -av --include='*.conf' --include='*.sh' --include='*.py' --exclude='*' --prune-empty-dirs {}/ {}@{}:{}".format(config.WORKDIR,getpass.getuser(),ip_host,config.HOMEDIR)
             args = shlex.split(cl)
             subprocess.call(args)
 
@@ -79,7 +80,7 @@ def deploy_servers():
 
     for ip_host in OPCUA_SERVER_CONFIG.DEPLOY:
         
-        cl =  "rsync -rv --include='*.conf' --include='*.sh' --include='*.py' --exclude='*' --prune-empty-dirs {}/ {}@{}:{}".format(OPCUA_SERVER_CONFIG.WORKDIR,getpass.getuser(),ip_host,OPCUA_SERVER_CONFIG.HOMEDIR)
+        cl =  "rsync -av --include='*.conf' --include='*.sh' --include='*.py' --exclude='*' --prune-empty-dirs {}/ {}@{}:{}".format(OPCUA_SERVER_CONFIG.WORKDIR,getpass.getuser(),ip_host,OPCUA_SERVER_CONFIG.HOMEDIR)
         args = shlex.split(cl)
         subprocess.call(args)
 

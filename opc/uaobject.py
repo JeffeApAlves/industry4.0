@@ -13,6 +13,7 @@ Abstrção de um objeto do opcua
 
 import os
 import sys
+import logging
 
 from concurrent.futures import Future, TimeoutError
 import time
@@ -33,11 +34,12 @@ from opcua.common.methods import call_method_full
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from client.uaclient import uaClient
-from misc.log import logger
 
 class uaObject(object):
 
     def __init__(self,parent,idx,name_obj):
+
+        self.logger = logging.getLogger(__name__)
 
         self._idx   = str(idx)
         self._node  = self.__get_node(parent,name_obj)
@@ -46,9 +48,14 @@ class uaObject(object):
     def node(self):
         return self._node
 
+
+    @property
+    def nodeid(self):
+        return self._node.nodeid
+
     @property
     def display_name(self):
-        return self._node.get_display_name()
+        return self._node.get_display_name().Text
 
     @property
     def value(self):
@@ -58,17 +65,14 @@ class uaObject(object):
     def value(self, val):
         self._node.set_value(val)
 
-    @property
-    def idx(self):
-        return self._idx
 
     def set_value(self,name,value):
 
-        self.__get_child(name).set_value(value)
+        self.get_child(name).set_value(value)
 
     def get_value(self,name):
 
-        return self.__get_child(name).get_value()
+        return self.get_child(name).get_value()
 
 
     def __get_node(self,parent,name):
@@ -83,14 +87,22 @@ class uaObject(object):
 
         try:
             node = parent.get_child(path)
+
+
         except:
-            logger.warn("Parent {} Node {} não foi encontrado".format(parent,path))
+            self.logger.warn("Parent {} Node {} não foi encontrado".format(parent,path))
             node = None
 
         return node
 
-    def __get_child(self,name):
+    def get_child(self,name):
 
         path = [":".join([self._idx,name])]
 
-        self._node.get_child(path)
+        try:
+            node = self._node.get_child(path)
+
+        except:
+            node = None
+            self.logger.warn("Node '{}' não encontrado".format(name))
+        return node

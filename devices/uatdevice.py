@@ -16,9 +16,8 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import ua
 
-from misc.log import logger
 from opc.uatype import uaType
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 
 class uaTDevice(uaType):
 

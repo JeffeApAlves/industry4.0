@@ -20,7 +20,7 @@ from cells.uacell import uaCell
 from cells.uatcell import uaTCell
 from cells.uatqc import uaTQC
 
-from startup.config import CELL_CONFIG
+from config.config import CELL_CONFIG
 
 class uaQC(uaCell):
 

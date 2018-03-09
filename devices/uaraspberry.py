@@ -12,7 +12,7 @@ Entidade Raspberry
 """
 
 import os,sys
-
+import logging
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 
@@ -23,9 +23,8 @@ from uatdevice import uaTDevice
 from uatraspberry import uaTRaspBerry
 from uadevice import uaDevice
 from opc.uaobject import uaObject
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 from raspberry.tlmsys import TlmSyS
-from misc.log import logger
 from misc.net import get_ip_address
 
 # telemetria raspberry
@@ -40,15 +39,16 @@ class uaRaspBerry(uaDevice):
     def __init__(self,idx,name):
 
         super().__init__(None,idx,name)
- 
+
+        self.logger = logging.getLogger(__name__)
+    
         self._temperature   = uaObject(self.node,idx,uaTRaspBerry.pTEMPERATURE)
         self._memory        = uaObject(self.node,idx,uaTRaspBerry.pMEMORY)
         self._harddisk      = uaObject(self.node,idx,uaTRaspBerry.pHARDDISK)
         self._cpu           = uaObject(self.node,idx,uaTRaspBerry.pCPU)
-        self._handle_temperatura    = None
 
-        self.create_event(self._temperature)
- 
+
+
     @property
     def temperature(self):
         return self._temperature.value
@@ -104,7 +104,7 @@ class uaRaspBerry(uaDevice):
         self.harddisk       = hd
         self.cpu            = cpu
 
-        logger.info("tlm: memory:{} temperature:{} hd:{} cpu:{}".format(memory,temperature,hd,cpu))
+        self.logger.info("tlm: memory:{} temperature:{} hd:{} cpu:{}".format(memory,temperature,hd,cpu))
 
 
     @staticmethod
@@ -120,6 +120,10 @@ class uaRaspBerry(uaDevice):
 
         return  uaTRaspBerry.create(dtype,idx,handle)
 
+    def get_SubHandler(self):
+
+        return SubHandler()
+
 
 class HandleRaspBerry(object):
 
@@ -132,17 +136,12 @@ class HandleRaspBerry(object):
     def reset(self,parent):
         pass
 
-class SubHandlerTemperature(object):
 
-    """
-    Subscription Handler. To receive events from server for a subscription
-    data_change and event methods are called directly from receiving thread.
-    Do not do expensive, slow or network operation there. Create another
-    thread if you need to do such a thing
-    """
+class SubHandler(object):
 
-    def data_change (self,event):
-        print("Alteração no dado da temperatura")
+    def datachange_notification(self, node, val, data):
+        print("New data change event", node, val, data)
 
     def event_notification(self, event):
-        print("New event recived: ", event)
+        print("New event", event)
+

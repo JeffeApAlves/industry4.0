@@ -21,7 +21,7 @@ from opcua import uamethod
 from uatdevice import uaTDevice
 from uadevice import uaDevice
 from uatcoveyor import uaTCoveyor
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 
 class uaCoveyor(uaDevice):
 
@@ -29,6 +29,12 @@ class uaCoveyor(uaDevice):
     CONFIG          = DEVICE_CONFIG(uaTDevice.COVEYOR)
 
 
+
+    def __init__(self,idx,name):
+
+        super().__init__(None,idx,name)
+        
+        
     @staticmethod
     def create(parent,idx,handle=None):
         """

@@ -15,7 +15,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import ua
 from uatdevice import uaTDevice
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 
 
 class uaTBarCodeReader(uaTDevice):
@@ -27,6 +27,11 @@ class uaTBarCodeReader(uaTDevice):
     CONFIG              = DEVICE_CONFIG(uaTDevice.BAR_CODE_READER)
 
 
+    def __init__(self,idx,name):
+
+        super().__init__(None,idx,name)
+        
+        
     @staticmethod
     def create(parent,idx,handle=None):
         """

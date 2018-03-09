@@ -15,9 +15,12 @@ import sys
 import os
 import locale
 import click
-import logging
 import time
 from distutils import *
+
+import logging
+import logging.config
+
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 
@@ -28,6 +31,7 @@ from opc.factory import Factory
 from server.uaserver import uaServer
 from devices.uatdevice import uaTDevice
 from misc.deploy import deploy_files
+from config.config import CONFIG 
 
 try:
     from IPython import embed
@@ -39,17 +43,20 @@ except ImportError:
 
 locale.setlocale(locale.LC_ALL, '')
 
+
 factory_device = Factory(uaTDevice)
 
 @click.group()
-@click.option('-v','--verbose', type =click.Choice(['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']), default='WARNING')
+@click.option('-v','--verbose', type =click.Choice(['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']), default=None)
 @click.pass_context
 def cli(ctx,verbose):
 
     ctx.obj['VERBOSE'] = verbose
 
-    # logging.basicConfig(level=logging.WARN)
-    #logging.basicConfig(format="%(levelname)s: %(message)s", level=getattr(logging, verbose))
+    logging.config.fileConfig("".join([CONFIG.CONFIGDIR,'/logging.conf']))
+    
+    if verbose is not None:
+        logging.basicConfig(level=verbose)
 
 
 @cli.command()
@@ -112,8 +119,8 @@ def device(type,idx,name):
     """
     
     uaClient.connect()
-
-    factory_device.create(idx,name,type)
+    
+    factory_device.create_object(idx,name,type)
 
     input("Press Ctrl+c to stop\n")
 

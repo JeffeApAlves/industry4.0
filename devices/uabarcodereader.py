@@ -19,12 +19,17 @@ from opcua import uamethod
 from uatdevice import uaTDevice
 from uadevice import uaDevice
 from uatbarcodereader import uaTBarCodeReader
-from startup.config import DEVICE_CONFIG
+from config.config import DEVICE_CONFIG
 
 class uaBarCodeReader(uaDevice):
 
     CONFIG      = DEVICE_CONFIG(uaTDevice.BAR_CODE_READER)
 
+
+    def __init__(self,idx,name):
+
+        super().__init__(None,idx,name)
+        
 
     @staticmethod
     def create(parent,idx,handle=None):

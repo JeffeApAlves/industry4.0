@@ -12,12 +12,11 @@ Thread para dispositivos
 
 import os,sys
 import time
+import logging
 from threading import Thread
 
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-
-from misc.log import logger
 
 
 class WorkerDevice(Thread):
@@ -25,7 +24,10 @@ class WorkerDevice(Thread):
 
     def __init__(self,device,time =0):
 
+
         Thread.__init__(self)
+
+        self.logger = logging.getLogger(__name__)
         
         self.__device   = device
         self.__time     = time
@@ -47,7 +49,7 @@ class WorkerDevice(Thread):
                 break
 
             except:
-                logger.error("Problema na execução da thread do dispositivo {}".format(self.__device.display_name))
+                self.logger.error("Problema na execução da thread do dispositivo {}".format(self.__device.display_name))
 
             if self.__time:
                 time.sleep(self.__time)

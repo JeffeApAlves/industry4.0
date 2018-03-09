@@ -13,16 +13,20 @@ Classe de abstrata para os locais
 
 
 import os,sys
+import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
-
+from opcua import ua
 from opcua import Server
-from startup.config import OPCUA_SERVER_CONFIG
+from config.config import OPCUA_SERVER_CONFIG
 from server.model import uaModel
-from misc.log import logger
+
+logger = logging.getLogger(__name__)
 
 class uaServer(object):
+
+    __SERVER = None
 
     @staticmethod
     def start_uaserver(name , url = None , xml = None,certificate = None,private_key = None, disable_clock = False):
@@ -36,30 +40,41 @@ class uaServer(object):
         if name is None:
             name = OPCUA_SERVER_CONFIG.NAME
 
-        server = Server()
+        uaServer.__SERVER = Server()
 
-        server.set_endpoint(url)
+        uaServer.__SERVER.set_endpoint(url)
 
-        server.set_server_name(name)
+        uaServer.__SERVER.set_server_name(name)
         
-        server.disable_clock(disable_clock)
+        uaServer.__SERVER.disable_clock(disable_clock)
 
-        idx = server.register_namespace(OPCUA_SERVER_CONFIG.URI)
+        idx = uaServer.__SERVER.register_namespace(OPCUA_SERVER_CONFIG.URI)
 
         if certificate is not None:
-            server.load_certificate(certificate)
+            uaServer.__SERVER.load_certificate(certificate)
         
         if private_key is not None:
-            server.load_private_key(private_key)
+            uaServer.__SERVER.load_private_key(private_key)
         
         if xml is not None:
-            server.import_xml(xml)
+            uaServer.__SERVER.import_xml(xml)
 
-        uaModel.create(server,idx)
+        uaModel.create(uaServer,idx)
 
         # exporta o modelo para um xml
-        server.export_xml_by_ns("/".join([OPCUA_SERVER_CONFIG.HOMEDIR,"server","model_ns.xml"])   ,[OPCUA_SERVER_CONFIG.URI])
+        uaServer.__SERVER.export_xml_by_ns("/".join([OPCUA_SERVER_CONFIG.HOMEDIR,"server","model_ns.xml"])   ,[OPCUA_SERVER_CONFIG.URI])
 
-        server.start()
+        uaServer.__SERVER.start()
 
         logger.info("Servidor iniciado com sucesso {}".format(url))
+
+
+    @staticmethod
+    def get_objects_node():
+        return uaServer.__SERVER.get_objects_node()
+
+
+    @staticmethod
+    def get_base_objectType_node():
+        
+        return uaServer.__SERVER.get_node(ua.ObjectIds.BaseObjectType)

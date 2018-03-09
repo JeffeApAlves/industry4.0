@@ -15,9 +15,8 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import ua
 
-from misc.log import logger
 from cells.uatcell import uaTCell
-from startup.config import CELL_CONFIG
+from config.config import CELL_CONFIG
 
 class uaTStorage(uaTCell):
 
