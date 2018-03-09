@@ -14,10 +14,9 @@ Classe de abstrata para as celulas
 import os,sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 
 
-from uatcell import uaTCell
+from cells.uatcell import uaTCell
 from opc.uaobject import uaObject
 from config.config import CELL_CONFIG
 

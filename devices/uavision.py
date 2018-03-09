@@ -16,10 +16,10 @@ import os,sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 
-from uatdevice import uaTDevice
 from opcua import uamethod
-from uatvision import uaTVision
-from uadevice import uaDevice
+from devices.uatdevice import uaTDevice
+from devices.uatvision import uaTVision
+from devices.uadevice import uaDevice
 from config.config import DEVICE_CONFIG
 
 class uaVision(uaDevice):

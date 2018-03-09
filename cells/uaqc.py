@@ -33,6 +33,6 @@ class uaQC(uaCell):
         Cria o tipo qc no server OPC-UA
         """
 
-        dtype  = uaCell.create_type(parent,idx)
+        dtype  = uaCell.create(parent,idx)
 
         return  uaTQC.create(dtype,idx,handle)

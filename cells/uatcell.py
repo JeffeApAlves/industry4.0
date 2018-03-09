@@ -10,11 +10,10 @@
 """
 
 import os,sys
-from opcua import ua
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 
+from opcua import ua
 from opc.uatype import uaType
 from config.config import CELL_CONFIG
 

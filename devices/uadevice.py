@@ -15,14 +15,13 @@ import os,sys
 import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 
 from opcua import uamethod
 
 from opc.uaobject import uaObject
 from config.config import DEVICE_CONFIG
-from workerdevice import WorkerDevice
-from uatdevice import uaTDevice
+from devices.workerdevice import WorkerDevice
+from devices.uatdevice import uaTDevice
 
 class uaDevice(uaObject):
 

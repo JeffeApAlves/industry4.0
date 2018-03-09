@@ -22,6 +22,9 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 
 class CONFIG(object):
+    """
+    Configurações gerias e comuns
+    """
 
     # diretrio raiz do projeto
     WORKDIR         = os.getenv('OPCUA_PROJECT_HOME','.')
@@ -30,7 +33,7 @@ class CONFIG(object):
     PROJECT_NAME    =  os.getenv('OPCUA_PROJECT_NAME','industry40')
 
     # path do arquivo de configuração
-    SETUP_CONF      = os.getenv('OPCUA_CONF',"".join([WORKDIR, "/{}.conf".format(PROJECT_NAME)] ))
+    SETUP_CONF      = os.getenv('OPCUA_CONF',"/".join([WORKDIR, "{}.conf".format(PROJECT_NAME)] ))
 
     # carrega  o json com as configurações
     with open(SETUP_CONF) as json_data_file:

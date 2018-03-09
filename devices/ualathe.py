@@ -16,9 +16,9 @@ import os,sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import uamethod
-from uatdevice import uaTDevice
-from uadevice import uaDevice
-from uatlathe import uaTLathe
+from devices.uatdevice import uaTDevice
+from devices.uadevice import uaDevice
+from devices.uatlathe import uaTLathe
 from config.config import DEVICE_CONFIG
 
 class uaLathe(uaDevice):

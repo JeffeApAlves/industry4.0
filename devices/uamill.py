@@ -17,9 +17,9 @@ import os,sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import uamethod
-from uatdevice import uaTDevice
-from uatmill import uaTMill
-from uadevice import uaDevice
+from devices.uatdevice import uaTDevice
+from devices.uatmill import uaTMill
+from devices.uadevice import uaDevice
 from config.config import DEVICE_CONFIG
 
 class uaMill(uaDevice):

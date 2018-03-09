@@ -13,8 +13,8 @@ Fabrica de celulas
 
 import os,sys
 import logging
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from cells.uacell import uaCell
 from cells.uaqc import uaQC
@@ -50,9 +50,9 @@ from places.uaplace import uaPlace
 from places.uabuffer import uaBuffer
 from places.uatrash import uaTrash
 
-from uatplace import uaTPlace
-from uatbuffer import uaTBuffer
-from uattrash import uaTTrash
+from places.uatplace import uaTPlace
+from places.uatbuffer import uaTBuffer
+from places.uattrash import uaTTrash
 
 
 from config.config import CONFIG

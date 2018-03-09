@@ -21,9 +21,7 @@ from distutils import *
 import logging
 import logging.config
 
-
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
-
     
 from client.uaclient import uaClient
 from opc.uaobject import uaObject
@@ -95,10 +93,9 @@ def write(obj,var,idx):
 @click.option('--var', type = click.STRING, default = None)
 def read(obj,var,idx):
     """
-    Acessando uma variavel atravé de path
+    Acessando uma variável através de path
     """
 
-    # Conecta no servidor opc
     uaClient.connect()
 
     # cria um objeto e le o valor
@@ -144,7 +141,7 @@ def device(type,idx,name):
                 help="set server private key")
 def server(url,xml,clock,shell,certificate,private_key,name):
     """
-    Roda o servidor OPC-UA.
+    Inicia o servidor OPC-UA configurações contida em arquivo .conf.
     """
 
     uaServer.start_uaserver(    url             = url,

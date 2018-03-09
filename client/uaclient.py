@@ -27,7 +27,6 @@ class uaClient(object):
 
     __CLIENT    = None
 
-
     @staticmethod
     def connect():
         '''
@@ -84,13 +83,15 @@ class uaClient(object):
 
 
     @ staticmethod
-    def subscribe_event(src_nodeid,priority,handler):
+    def subscribe_event(var_nodeid,priority,handler):
+        """
+        Registra um handler no evento data change de um determinado nodeid
+        """
 
         try:
 
             sub = uaClient.__CLIENT.create_subscription(priority, handler)
-
-            sub.subscribe_data_change(src_nodeid)
+            sub.subscribe_data_change(var_nodeid)
 
         except IOError as e:
             logger.warn("Não foi possível inscrever o evento\nI/O error({0}): {1}".format(e.errno, e.strerror))

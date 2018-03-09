@@ -16,7 +16,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 
 from opcua import ua
-from uadevice import uaTDevice
+from devices.uadevice import uaTDevice
 from config.config import DEVICE_CONFIG
 
 

@@ -19,13 +19,13 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import uamethod
 
-from uatdevice import uaTDevice
-from uatraspberry import uaTRaspBerry
-from uadevice import uaDevice
 from opc.uaobject import uaObject
 from config.config import DEVICE_CONFIG
 from raspberry.tlmsys import TlmSyS
 from misc.net import get_ip_address
+from devices.uatdevice import uaTDevice
+from devices.uatraspberry import uaTRaspBerry
+from devices.uadevice import uaDevice
 
 # telemetria raspberry
 tlmsys  = TlmSyS()

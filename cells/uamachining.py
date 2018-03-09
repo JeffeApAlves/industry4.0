@@ -32,7 +32,7 @@ class uaMachining(uaCell):
         Cria o tipo machining no server OPC-UA
         """
 
-        dtype  = uaCell.create_type(parent,idx)
+        dtype  = uaCell.create(parent,idx)
 
         return  uaTMachining.create(dtype,idx,handle)
 

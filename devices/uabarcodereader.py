@@ -16,9 +16,9 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 
 from opcua import uamethod
-from uatdevice import uaTDevice
-from uadevice import uaDevice
-from uatbarcodereader import uaTBarCodeReader
+from devices.uatdevice import uaTDevice
+from devices. uadevice import uaDevice
+from devices.uatbarcodereader import uaTBarCodeReader
 from config.config import DEVICE_CONFIG
 
 class uaBarCodeReader(uaDevice):

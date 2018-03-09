@@ -14,7 +14,7 @@ import os,sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import ua
-from uatplace import uaTPlace
+from places.uatplace import uaTPlace
 from config.config import PLACE_CONFIG
 
 class uaTBuffer(uaTPlace):
