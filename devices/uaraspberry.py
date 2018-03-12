@@ -11,7 +11,8 @@ Entidade Raspberry
 
 """
 
-import os,sys
+import os
+import sys
 import logging
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
@@ -46,7 +47,6 @@ class uaRaspBerry(uaDevice):
         self._memory        = uaObject(self.node,idx,uaTRaspBerry.pMEMORY)
         self._harddisk      = uaObject(self.node,idx,uaTRaspBerry.pHARDDISK)
         self._cpu           = uaObject(self.node,idx,uaTRaspBerry.pCPU)
-
 
 
     @property
@@ -130,11 +130,11 @@ class HandleRaspBerry(object):
 
     @uamethod
     def shutdown(self,parent):
-        pass
+        print("RaspBerry desligando...")
 
     @uamethod
     def reset(self,parent):
-        pass
+        print("RaspBerry reset")
 
 
 class SubHandler(object):

@@ -11,7 +11,8 @@ Classe de abstrata para as celulas
 
 """
 
-import os,sys
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
@@ -25,9 +26,8 @@ class uaMachining(uaCell):
 
     CONFIG   = CELL_CONFIG(uaTCell.MACHINING)
 
-
     @staticmethod
-    def create_type(parent,idx,handle=None):
+    def create(parent,idx,handle=None):
         """
         Cria o tipo machining no server OPC-UA
         """
@@ -35,4 +35,5 @@ class uaMachining(uaCell):
         dtype  = uaCell.create(parent,idx)
 
         return  uaTMachining.create(dtype,idx,handle)
+
 

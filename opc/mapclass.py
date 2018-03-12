@@ -11,7 +11,8 @@ Fabrica de celulas
 
 """
 
-import os,sys
+import os
+import sys
 import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
@@ -55,33 +56,24 @@ from places.uatbuffer import uaTBuffer
 from places.uattrash import uaTTrash
 
 
-from config.config import CONFIG
-
-
 
 logger = logging.getLogger(__name__)
 
 
-class MapClass(object):
+def str_to_class(py_type):
+    """
+    Retorna a classe respectiva ao tipo
+    """
 
-    @staticmethod
-    def get_config(type):
-        """
-        Retorna o config respectivo ao tipo
-        """
-
-        return MapClass.get_class(CONFIG.get_map_class()[type]).CONFIG
-
-
-    @staticmethod
-    def get_class(py_type):
-        """
-        Retorna a classe respectiva ao tipo
-        """
+    try:
 
         type_class = globals()[py_type]
 
         if type_class is  None:
-            logger.warn("Classe para o tipo {} não mapeado".format(type))
-
-        return type_class
+            logger.error("Classe para o tipo {} não mapeado".format(type))
+    
+    except:
+        type_class = None
+        logger.error("Classe para o tipo {} não mapeado".format(type))
+        
+    return type_class

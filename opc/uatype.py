@@ -10,9 +10,14 @@
 """
 
 
-import os,sys
+import os
+import sys
+import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
+
+
+logger = logging.getLogger(__name__)
 
 class uaType(object):
 
@@ -20,19 +25,31 @@ class uaType(object):
     @staticmethod
     def create_type(parent,idx,type=None,handle=None):
         """
-        Cria, no <parent> , um child do tipo indicado por <type>
+        Adiciona <parent> , um child do tipo indicado por <type>
         """
 
+        opc_type = type.CONFIG.OPC_TYPE
+
+
         try:
-            child = parent.get_child(":".join([str(idx), type.CONFIG.UA_TYPE ]))
+            child = parent.get_child(":".join([str(idx), opc_type ]))
         except:
-            child = parent.add_object_type(idx,type.CONFIG.UA_TYPE)
 
-            # cria metodos do proriedades
-            child = type.create_property(child,idx)
+            try:
+                child = parent.add_object_type(idx,opc_type )
 
-            # cria metodos do chield
-            child = type.create_methods(child,idx,handle)
+                # cria metodos do proriedades
+                type.create_property(child,idx )
+
+                # cria metodos do child
+                type.create_methods(child,idx,handle)
+
+            except IOError as e:
+                
+                print(e)
+
+        
+        logger.info("Created child: Parent {} Tipo {} Child {} - children: {}".format(parent,opc_type,child,child.get_children()))    
 
         return child
 
@@ -42,8 +59,7 @@ class uaType(object):
         """
         Cria as propriedades
         """
-
-        return obj_type
+        pass
 
 
     @staticmethod
@@ -51,5 +67,4 @@ class uaType(object):
         """
         Cria os metodos
         """
-        
-        return obj_type
+        pass

@@ -11,8 +11,8 @@ Baseado no ip existem no arquivo .conf copia os arquivos para cada host
 
 """
 
-
-import os,sys
+import os
+import sys
 import getpass
 import subprocess
 import shlex
@@ -50,16 +50,14 @@ def deploy_devices():
     #TODO verificar se existe a necessidade fazer deploy de todos os diretorios
     directories = [ name for name in os.listdir(".") if os.path.isdir(os.path.join(".", name)) ]
 
+    all_objects = Factory.get_name_objects()
 
-    factory = Factory(uaTDevice)
+    for entity in all_objects:
 
-    for type in factory.get_list_types():
-
-
-        config = factory.get_config(type)
+        config = Factory.get_config(entity=entity)
         
         for ip_host in config.DEPLOY:
-            print(config.HOMEDIR)
+
             cl =  "rsync -av --include='*.conf' --include='*.sh' --include='*.py' --exclude='*' --prune-empty-dirs {}/ {}@{}:{}".format(config.WORKDIR,getpass.getuser(),ip_host,config.HOMEDIR)
             args = shlex.split(cl)
             subprocess.call(args)
@@ -69,6 +67,7 @@ def deploy_devices():
             subprocess.call(args)
 
 
+
 def deploy_servers():
     """
     Deploy os diretorios e o conteudo para o servidor opcua
@@ -76,7 +75,6 @@ def deploy_servers():
 
     #TODO verificar se existe a necessidade fazer deploy de todos os diretorios
     directories = [ name for name in os.listdir(".") if os.path.isdir(os.path.join(".", name)) ]
-
 
     for ip_host in OPCUA_SERVER_CONFIG.DEPLOY:
         

@@ -9,7 +9,8 @@
 
 """
 
-import os,sys
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
@@ -22,14 +23,14 @@ from config.config import DEVICE_CONFIG
 class uaTDevice(uaType):
 
     # tipos de dispositivos no OPC-UA
-    DEVICE          = "device" 
-    RASPBERRY       = "raspberry"
-    ROBOT           = "robot"
-    VISION          = "vision"
-    COVEYOR         = "coveyor"
-    BAR_CODE_READER = "bar-code-reader"
-    LATHE           = "lathe"
-    MILL            = "mill"
+    DEVICE          = "DeviceType" 
+    RASPBERRY       = "RaspBerryType"
+    ROBOT           = "RobotType"
+    VISION          = "VisionType"
+    COVEYOR         = "CoveyorType"
+    BAR_CODE_READER = "BarCodeReaderType"
+    LATHE           = "LatheType"
+    MILL            = "MillType"
 
     # proppriedades OPC-UA
     pMODEL          = "Model"

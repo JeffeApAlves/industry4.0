@@ -11,12 +11,14 @@ Classe de abstrata para locais do tipo buffer
 
 """
 
-import os,sys
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from places.uaplace import uaPlace
 from places.uatplace import uaTPlace
+from places.uatbuffer import uaTBuffer
 from config.config import PLACE_CONFIG
 
 class uaBuffer(uaPlace):
@@ -24,8 +26,8 @@ class uaBuffer(uaPlace):
     CONFIG   = PLACE_CONFIG(uaTPlace.BUFFER)
 
     @staticmethod
-    def create(parent,idx):
+    def create(parent,idx,handle=None):
 
-        obj_type = uaPlace.create(parent,idx)
+        dtype = uaPlace.create(parent,idx)
 
-        return  obj_type
+        return  uaTBuffer.create(dtype,idx,handle)

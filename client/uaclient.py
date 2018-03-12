@@ -11,21 +11,25 @@ Conexão com  o servidor OPC
 
 """
 
-import sys,os
+import sys
+import os
 import logging
+import time
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 
-from opcua import Client
-from opcua import ua
+from opcua import Client,ua
+from opc.uaobject import uaObject
 from config.config import OPCUA_SERVER_CONFIG
 
 logger = logging.getLogger(__name__)
 
 class uaClient(object):
 
-    __CLIENT    = None
+    __Client    = None
+    __idx       = 1
+    __Objects   = None
 
     @staticmethod
     def connect():
@@ -35,34 +39,37 @@ class uaClient(object):
 
         try:
 
-            if uaClient.__CLIENT is None:
+            if uaClient.__Client is None:
 
                 # Rntidade client
-                uaClient.__CLIENT = Client(OPCUA_SERVER_CONFIG.URL)
+                uaClient.__Client = Client(OPCUA_SERVER_CONFIG.URL)
 
                 # Conectando ...
-                uaClient.__CLIENT.connect()
+                uaClient.__Client.connect()
 
-                logger.info("Conectado ao servidor OPC-UARoot: {}\nChildren {}".format(uaClient.get_root_node(),uaClient.get_root_node().get_children()))
+                uaClient.__Objects = uaClient.__Client.get_objects_node() 
+
+                logger.info("Client conectado ao servidor OPC-UA")
+
+                logger.info("Children in objects: {}".format(uaClient.get_objects_node().get_children()))
+
+                logger.info("Encontrado 1 !!!!!!!!!!! {}".format(uaClient.get_objects_node().get_child(["1:RB3"])))
+
 
         except :
             logger.error("Erro ao tentar conectar no servidor opcua {} !".format(OPCUA_SERVER_CONFIG.HOST))
-            uaClient.__CLIENT.disconnect()
-            uaClient.__CLIENT = None
-
-        return uaClient.__CLIENT
-
-    @staticmethod
-    def get_client():
-        return uaClient.__CLIENT
+            uaClient.disconnect()
+            
 
     @staticmethod
     def disconnect():
         """
         Desconecta do servidor OPC-UA 
-        """
 
-        uaClient.__CLIENT.disconnect()
+        """
+        uaClient.__Client.disconnect()
+        uaClient.__Client = None
+        logger.info("Client desconectado")
 
 
     @staticmethod
@@ -71,28 +78,43 @@ class uaClient(object):
         Retorna o root node
         """
 
-        return uaClient.__CLIENT.get_root_node()
+        return uaClient.__Client.get_root_node()
 
     @staticmethod
     def get_objects_node():
         """
         Retorna o objects node
         """
+        return uaClient.__Objects
+        #return uaClient.__Client.get_objects_node()
 
-        return uaClient.__CLIENT.get_objects_node()
+
+    @staticmethod
+    def get_idx():
+        """
+        Retorna o objects node
+        """
+
+        return uaClient.__idx
 
 
     @ staticmethod
     def subscribe_event(var_nodeid,priority,handler):
         """
         Registra um handler no evento data change de um determinado nodeid
+
+        :param handler: callback que serão chamadas para processamento do evento.
+ 
         """
 
-        try:
+        sub = uaClient.__Client.create_subscription(priority, handler)
+        sub.subscribe_data_change(var_nodeid)
+        logger.info("Registrado o data change evento em {}".format(var_nodeid))
 
-            sub = uaClient.__CLIENT.create_subscription(priority, handler)
-            sub.subscribe_data_change(var_nodeid)
-
-        except IOError as e:
-            logger.warn("Não foi possível inscrever o evento\nI/O error({0}): {1}".format(e.errno, e.strerror))
-        
+    @staticmethod
+    def get_object(name):
+        """
+        Retorna um objeto
+        """
+    
+        return uaObject(uaClient.get_objects_node(),uaClient.__idx,name)

@@ -9,7 +9,8 @@
 
 """
 
-import os,sys
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
@@ -20,12 +21,11 @@ from config.config import CELL_CONFIG
 class uaTCell(uaType):
 
     # tipos de celulas
-    CELL            = "cell"
-    QUALITY_CONTROL = "quality-control"
-    OFFICE          = "office"
-    STORAGE         = "storage"
-    ASSEMBLY        = "assembly"
-    MACHINING       = "machining"
+    CELL            = "CellType"
+    QUALITY_CONTROL = "QCType"
+    STORAGE         = "StorageType"
+    ASSEMBLY        = "AssemblyType"
+    MACHINING       = "MachiningType"
 
     CONFIG          = CELL_CONFIG(CELL)
 

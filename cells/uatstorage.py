@@ -9,7 +9,8 @@
 
 """
 
-import os,sys
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
@@ -19,7 +20,7 @@ from config.config import CELL_CONFIG
 
 class uaTStorage(uaTCell):
 
-    CONFIG = CELL_CONFIG(uaTCell.MACHINING)
+    CONFIG = CELL_CONFIG(uaTCell.STORAGE)
 
     @staticmethod
     def create(parent,idx,handle=None):

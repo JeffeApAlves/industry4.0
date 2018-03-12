@@ -10,13 +10,15 @@
 Classe de abstrata para locias do tipo trash
 
 """
-import os,sys
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 
 from places.uaplace import uaPlace
 from places.uatplace import uaTPlace
+from places.uattrash import uaTTrash
 from config.config import PLACE_CONFIG
 
 class uaTrash(uaPlace):
@@ -24,8 +26,8 @@ class uaTrash(uaPlace):
     CONFIG   = PLACE_CONFIG(uaTPlace.TRASH)
 
     @staticmethod
-    def create(parent,idx):
+    def create(parent,idx,handle=None):
 
-        obj_type = uaPlace.create(parent,idx)
+        dtype = uaPlace.create(parent,idx)
 
-        return  obj_type
+        return  uaTTrash.create(dtype,idx,handle)

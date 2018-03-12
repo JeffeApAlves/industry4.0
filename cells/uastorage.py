@@ -11,7 +11,8 @@ Classe de abstrata para as celulas
 
 """
 
-import os,sys
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
@@ -28,7 +29,7 @@ class uaStorage(uaCell):
 
 
     @staticmethod
-    def create_type(parent,idx,handle=None):
+    def create(parent,idx,handle=None):
         """
         Cria o tipo storage no server OPC-UA
         """

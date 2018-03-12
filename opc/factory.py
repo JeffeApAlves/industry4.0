@@ -11,120 +11,156 @@ Fabrica de objetos
 
 """
 
-import os,sys
+import os
+import sys
 import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
-
 from cells.uatcell import uaTCell
 from places.uatplace import uaTPlace
 from devices.uatdevice import uaTDevice
-from opc.mapclass import MapClass
-from opc.events import Events
+from opc.mapclass import str_to_class
+from opc.uaobject import uaObject
+from client.uaclient import uaClient
 from config.config import CONFIG
 
+
+logger = logging.getLogger(__name__)
 
 class Factory(object):
 
     """
     Instruções para adicionar novos tipos
 
-    1. Editar o arquivo industry.conf adicionando o novo tipo de local
+    1. Editar o arquivo industry40.conf adicionando o novo tipo
     2. Adicionar , na classe generalista (uaTXXX),  uma constante com o nome que foi usado no arquivo conf
-    3. Implemetar as classes do novo tipo uaTXXX (create_methods,create_pro,create) e uaXXX (init,create_type)
+    3. Implemetar as classes do novo tipo uaTXXX  (create) e uaXXX (create) (create_methods,create_pro,create)
     """
 
 
-    def __init__(self,type):
-
+    @staticmethod
+    def get_list_types():
+        """
+        Retorna a lista de tipos
+        """
     
-        self.logger = logging.getLogger(__name__)
+        types = []
+
+        for t in [uaTCell , uaTDevice ,  uaTPlace]:
+            types += t.get_list()
+
+        return types
 
 
-        # Lista com os tipos
-        self.__Type = type 
-
-    def get_list_types(self):
-        """
-        Retorna a lista de tipos de dispositos
-        """
-
-        return self.__Type.get_list()
-
-
-    def get_type_class(self,type):
+    @staticmethod
+    def get_type_class(opc_type):
         """
         Retorna a classe do tipo respectiva do tipo
         """
 
-        class_name = self.get_config(type).PY_TYPE
+        class_type = Factory.get_config(opc_type).TYPE
 
-        return MapClass.get_class(class_name)
+        return str_to_class(class_type)
 
 
-    def get_obj_class(self,type):
+    @staticmethod
+    def get_entity_class(opc_type):
         """
         Retorna a classe do objeto respectiva do tipo
         """
 
-        class_name = self.get_config(type).PY_OBJ
+        class_entity = Factory.get_config(opc_type).ENTITY
 
-        return MapClass.get_class(class_name)
+        return str_to_class(class_entity)
 
-
-    def get_config(self,type):
+    @staticmethod
+    def get_config(opc_type=None,entity=None):
         """
         Retorna a configuração respectiva do tipo
         """
 
-        return MapClass.get_config(type)
+        return CONFIG(opc_type = opc_type , entity=entity)
 
-
-    def get_list_objects(self,type):
+    @staticmethod
+    def get_name_objects():
         """
         Retorna a lista de objetos a serem criados
         """
 
-        return self.get_config(type).OBJECTS
+        return CONFIG.get_name_objects()
 
-
-    def create_object(self,idx,name,type):
+    @staticmethod
+    def create_entity(idx,name,opc_type):
         """
         Cria um objeto python de um dispositivo do tipo <type> com o nome <name> e vincula com o objeto correspondente no OPC-UA
         """
 
-
         try:
-
-            class_of_obj= self.get_obj_class(type)
+            class_of_entity = Factory.get_entity_class(opc_type)
 
             # instancia o objeto
-            py_obj      = class_of_obj(idx,name)
+            py_obj      = class_of_entity(idx,name)
 
-            Events.create_data_change_events(idx,py_obj)
+            Factory.create_data_change_events(idx,py_obj)
             
-            self.logger.info("Sucesso Dispositivo {} criado class {}".format(name,class_of_obj))    
+            #self.logger.info("Sucesso Dispositivo {} criado class {}".format(name,class_of_entity.__name__))    
 
         except IOError as e:
             py_obj = None
-            self.logger.warn("Não foi possível criar o dispositivo {}\nI/O error({0}): {1}".format(name,e.errno, e.strerror))
+            logger.warning("Não foi possível criar o dispositivo {}\nI/O error({0}): {1}".format(name,e.errno, e.strerror))
 
         return  py_obj
 
 
-    def create_ua_type(self,parent,idx,type):
+    @staticmethod
+    def create_type(parent,idx,opc_type):
         """
-        Cria um tipo de dispositivo com o nome <type>  no servidor OPC-UA
+        Cria um node (tipo) com o nome <type>  no servidor OPC-UA
         """
    
         try:
-            obj_class   = self.get_obj_class(type)
-            ua_obj      = obj_class.create(parent,idx)
-            self.logger.info("Sucesso : Parent {} - Tipo {}  Objeto  {} chield {}".format(parent,type,obj_class,ua_obj))    
-        except:
+            class_of_entity = Factory.get_entity_class(opc_type)
 
-            ua_obj = None
-            self.logger.warn("Não foi possível criar  : Parent {} - Tipo {} class {} chield {}".format(parent,type,obj_class,ua_obj))    
+            logger.info("Inicio criando tipo {}-{} !".format(opc_type,class_of_entity.__name__))
+               
 
-        return ua_obj
+            type_obj        = class_of_entity.create(parent,idx)
+
+            #self.logger.info("Sucesso Parent {} - Tipo {} class {} chied {}".format(parent,opc_type,class_of_entity.__name__,type_obj))    
+        
+        except IOError as e:
+
+            type_obj = None
+            logger.warning("Não foi possível criar  : Parent {} - Tipo {} class {}".format(parent,opc_type,class_of_entity.__name__))    
+            print(e)
+
+        return type_obj
+
+    @staticmethod
+    def create_data_change_events(idx,entity_obj):
+        """
+        Cria eventos para o objeto
+        """
+
+        try:
+            parent      = uaClient.get_objects_node()
+
+            all_events  = CONFIG( entity = entity_obj ).EVENTS_DATA_CHANGE
+
+            for e in all_events:
+                
+                n_obj,n_var     = e['data-source'].split(".")
+                priority        = e['priority']
+                name_handler    = e['handler']
+
+                var             = uaObject(parent,idx,n_obj).get_child(n_var)
+                handler         = entity_obj.create_handler(name_handler)
+
+                uaClient.subscribe_event(var,priority,handler)
+
+                logger.info("Sucesso evento data change do {} registrado em {}".format(entity_obj.display_name,var))
+
+        except :
+
+            logger.warning("Não foi encontrado eventos para esse objeto {}".format(entity_obj))

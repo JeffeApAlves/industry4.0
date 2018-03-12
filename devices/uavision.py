@@ -11,10 +11,10 @@ Entidade Raspberry
 
 """
 
-import os,sys
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-
 
 from opcua import uamethod
 from devices.uatdevice import uaTDevice
@@ -27,7 +27,7 @@ class uaVision(uaDevice):
     CONFIG      = DEVICE_CONFIG(uaTDevice.VISION)
 
     @staticmethod
-    def create_type(parent,idx,handle=None):
+    def create(parent,idx,handle=None):
         """
         Cria o tipo coveyor no server OPC-UA
         """
@@ -35,7 +35,7 @@ class uaVision(uaDevice):
         if handle is None:
             handle = HandleVision()
 
-        dtype  = uaDevice.create_type(parent,idx)
+        dtype  = uaDevice.create(parent,idx)
 
         return  uaTVision.create(dtype,idx,handle)
 

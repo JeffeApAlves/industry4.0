@@ -12,7 +12,8 @@ Carrega as configurações do arquivo
 """
 
 
-import os,sys
+import os
+import sys
 import logging
 import psutil
 import shlex

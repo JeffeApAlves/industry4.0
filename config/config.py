@@ -11,209 +11,231 @@ Carrega as configurações do arquivo
 
 """
 
-
-import os,sys
+import os
+import sys
 import getpass
 import json
+import logging
 
 from distutils import *
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-
 
 class CONFIG(object):
     """
     Configurações gerias e comuns
     """
 
+    _OPC_SERVER_SECTION     = "opcua-server"
+    _SECTION_DEVICES        = "devices"
+    _SECTION_CELLS          = "cells"
+    _SECTION_PLACES         = "places"
+
+    _EVENTS                 = "events"
+    _DATA_CHANGE            = "data-change"
+    _HOMEDIR                = "homedir"
+    _TYPE                   = "type"
+    _DEPLOY                 = "deploy"
+    _INHERIT                = "inherit"
+    _ENTITY                 = "entity"
+
+
     # diretrio raiz do projeto
-    WORKDIR         = os.getenv('OPCUA_PROJECT_HOME','.')
+    WORKDIR                 = os.getenv('OPCUA_PROJECT_HOME','.')
 
     # Nome do projeto
-    PROJECT_NAME    =  os.getenv('OPCUA_PROJECT_NAME','industry40')
+    PROJECT_NAME            =  os.getenv('OPCUA_PROJECT_NAME','industry40')
 
     # path do arquivo de configuração
-    SETUP_CONF      = os.getenv('OPCUA_CONF',"/".join([WORKDIR, "{}.conf".format(PROJECT_NAME)] ))
+    SETUP_CONF              = os.getenv('OPCUA_CONF',"/".join([WORKDIR, "{}.conf".format(PROJECT_NAME)] ))
+
+    # diretrio raiz do projeto
+    HOMEDIR                 = WORKDIR
+
+    # diretrio com o modelo em xml
+    SERVERDIR               = "/".join([HOMEDIR,"server"])
+
+    # diretorio program devices
+    CLIENDIR                = "/".join([HOMEDIR,"client"])
+
+    # diretorio com o processo de inicialização
+    STARTUPDIR              = "/".join([HOMEDIR,"startup"])
+
+    # diretorio com o processo de inicialização
+    CONFIGDIR               = "/".join([HOMEDIR,"config"])
+
+    # arquivo de eventos
+    FILE_EVENTS             = "/".join([CONFIGDIR,"objects.conf"])
 
     # carrega  o json com as configurações
     with open(SETUP_CONF) as json_data_file:
         _configuration = json.load(json_data_file)
 
-    # diretrio raiz do projeto
-    HOMEDIR     = WORKDIR
+    # carrega  o json com as configurações
+    with open(FILE_EVENTS) as json_data_file:
+        __objects = json.load(json_data_file)
 
-    # diretrio com o modelo em xml
-    SERVERDIR   = "/".join([HOMEDIR,"server"])
 
-    # diretorio program devices
-    CLIENDIR    = "/".join([HOMEDIR,"client"])
+    def __init__(self,section=None,opc_type=None,entity=None):
 
-    # diretorio com o processo de inicialização
-    STARTUPDIR  = "/".join([HOMEDIR,"startup"])
+        self.logger = logging.getLogger(__name__)
 
-    # diretorio com o processo de inicialização
-    CONFIGDIR   = "/".join([HOMEDIR,"config"])
+        self._section           = section
+        self._entity            = entity
+        self._opc_type          = opc_type
+        self._config_entity     = None
+        self._config_type       = None
 
-    # arquivo de eventos
-    FILE_EVENTS = "/".join([CONFIGDIR,"events.conf"])
+        if entity is not None:
 
-   
+            # configuração especifica do objeto
+            self._config_entity = CONFIG.__objects[entity]
+            
+            # atualiza o tipo conforme o objeto
+            self._opc_type      = self._config_entity[CONFIG._TYPE]
+
+            # atualiza o diretorio de trabalho
+            CONFIG.HOMEDIR      = self._config_entity[CONFIG._HOMEDIR] 
+
+        # sessão não definida então procura no conf baseado no opc_type  
+        if section is None:
+            self._section       = self.search_section()
+
+        # configuração especifica do tipo
+        if self._opc_type is not None:
+            self._config_type   = CONFIG._configuration[self._section][self._opc_type] 
+
+
     @staticmethod
-    def get_map_class():
+    def choice_to_classe(choice):
         """
-        Retorna um dicionarios com os tipos usado no arquivo conf e sua respectiva class
+        TODO: verificar funcionamento
+        """
+        
+        devices = CONFIG._configuration[CONFIG._SECTION_DEVICES]
+
+        for key in devices:
+            if choice == devices[key]['choice']:
+                break
+        else:
+            device = ""
+
+        return device
+
+
+
+    @staticmethod
+    def get_list_device_choice():
+        """
+        Retorna a lista de opçoes
+        """
+        
+        devices = CONFIG.get_list_devices()
+
+        choices = []
+
+        for d in devices:
+            if d != "---":
+                choices.append(d)
+
+        return choices
+
+    @staticmethod
+    def get_list_devices():
+        return list(CONFIG._configuration[CONFIG._SECTION_DEVICES].keys())
+
+    @staticmethod
+    def get_name_objects():
+        return list(CONFIG.__objects.keys())
+
+    @staticmethod
+    def get_objects():
+        return CONFIG.__objects
+
+    @property
+    def EVENTS_DATA_CHANGE (self):
+        return self._config_entity[CONFIG._EVENTS][CONFIG._DATA_CHANGE]
+
+    @property
+    def ENTITY(self):
+        return self._config_type[CONFIG._ENTITY]
+
+    @property
+    def INHERIT(self):
+        return self._config_type[CONFIG._INHERIT]
+
+    @property
+    def TYPE(self):
+        return self._config_type[CONFIG._TYPE]
+
+    @property
+    def DEPLOY(self):
+        return self._config_entity[CONFIG._DEPLOY]
+
+    @property
+    def OPC_TYPE(self):
+        return  self._opc_type
+
+
+    def search_section(self):
+        """
+        Procura a sessão no arquivo de configuração baseado no opc_type
         """
 
-        sections = ['devices','places','cells']
+        sections = ["devices","places","cells"]
 
-        out = {}
+        for section in sections:
 
-        for s in sections:
+            opc_types = CONFIG._configuration[section].keys()
 
-            itens = list(CONFIG._configuration[s].keys())
+            for opc_type in opc_types:
 
-            for i in itens:
-
-                out[i] = CONFIG._configuration[s][i]['py-obj']
-
-        return  out
-
+                if opc_type == self._opc_type:
+                    break
+            else:
+                continue
+            break
+        else:
+            self.logger.error("Sessão para o tipo {} não encontrada.".format(self._opc_type))
+            section = ""
+    
+        return  section
 
 class OPCUA_SERVER_CONFIG(CONFIG):
     '''
     Configurações relacionadas ao servidor OPCUA
     '''
 
-    HOST    = CONFIG._configuration['opcua-server']['host']
-    NAME    = CONFIG._configuration['opcua-server']['name']
-    PORT    = CONFIG._configuration['opcua-server']['port']
-    HOMEDIR = CONFIG._configuration['opcua-server']['homedir']
-    URI     = CONFIG._configuration['opcua-server']['uri']
-    DEPLOY  = CONFIG._configuration['opcua-server']['deploy']
+    def __init__(self):
+        super().__init__(CONFIG._OPC_SERVER_SECTION)
+
+    HOST    = CONFIG._configuration[CONFIG._OPC_SERVER_SECTION]['host']
+    NAME    = CONFIG._configuration[CONFIG._OPC_SERVER_SECTION]['name']
+    PORT    = CONFIG._configuration[CONFIG._OPC_SERVER_SECTION]['port']
+    HOMEDIR = CONFIG._configuration[CONFIG._OPC_SERVER_SECTION][CONFIG._HOMEDIR]
+    URI     = CONFIG._configuration[CONFIG._OPC_SERVER_SECTION]['uri']
+    DEPLOY  = CONFIG._configuration[CONFIG._OPC_SERVER_SECTION][CONFIG._DEPLOY]
 
     # string de conexão
     # END_POINT  = "opc.tcp://{}:{}/freeopcua/server/".format(OPCUA_SERVER_CONFIG.HOST,OPCUA_SERVER_CONFIG.PORT)
     URL     = "opc.tcp://{}@{}:{}/freeopcua/server/".format(getpass.getuser(),HOST,PORT)
 
-    # adiciona diretorio de ferramentas no path
-    sys.path.append(os.path.join(HOMEDIR, ''))
-
 
 
 class DEVICE_CONFIG(CONFIG):
-    '''
-    Configurações relacionadas aos dispositivos 
-    '''
 
-    # tipos de dispositivos da rede
-    TYPES           = list(CONFIG._configuration['devices'].keys())
+    def __init__(self,opc_type=None,entity=None):
+        super().__init__(section = DEVICE_CONFIG._SECTION_DEVICES,opc_type = opc_type,entity=entity)
 
-    def __init__(self,name_device):
-        self.__name_device = name_device
-
-
-
-    @property
-    def PY_OBJ(self):
-        return CONFIG._configuration['devices'][self.__name_device]['py-obj']
-
-    @property
-    def PY_TYPE(self):
-        return CONFIG._configuration['devices'][self.__name_device]['py-type']
-
-
-    @property
-    def HOMEDIR(self):
-        return CONFIG._configuration['devices'][self.__name_device]['homedir']
-
-    @property
-    def UA_TYPE(self):
-        return CONFIG._configuration['devices'][self.__name_device]['ua-type']
-
-    @property
-    def OBJECTS(self):
-        try:
-            objects = CONFIG._configuration['devices'][self.__name_device]['objects']
-        except:
-            objects = []
-
-        return objects
-
-    @property
-    def DEPLOY(self):
-        try:
-            deploys = CONFIG._configuration['devices'][self.__name_device]['deploy']
-        except:
-            deploys = []
-
-        return deploys
 
 class CELL_CONFIG(CONFIG):
-    '''
-    Configurações relacionadas as celulas 
-    '''
 
-    # celulas de montagemm
-    TYPES= list(CONFIG._configuration['cells'].keys())
+    def __init__(self,opc_type=None,entity=None):
+        super().__init__(section=CELL_CONFIG._SECTION_CELLS,opc_type = opc_type,entity=entity)
 
-    def __init__(self,name_device):
-        self.__name_device = name_device
-
-
-
-    @property
-    def PY_OBJ(self):
-        return CONFIG._configuration['cells'][self.__name_device]['py-obj']
-
-    @property
-    def PY_TYPE(self):
-        return CONFIG._configuration['cells'][self.__name_device]['py-type']
-
-
-    @property
-    def UA_TYPE(self):
-        return CONFIG._configuration['cells'][self.__name_device]['ua-type']
-
-    @property
-    def OBJECTS(self):
-        try:
-            objects = CONFIG._configuration['cells'][self.__name_device]['objects']
-        except:
-            objects = []
-
-        return objects
 
 class PLACE_CONFIG(CONFIG):
-    '''
-    Configurações relacionadas aos locais 
-    '''
-
-    # celulas de montagemm
-    TYPES= list(CONFIG._configuration['places'].keys())
-
-    def __init__(self,name_device):
-        self.__name_device = name_device
 
 
-
-    @property
-    def PY_OBJ(self):
-        return CONFIG._configuration['places'][self.__name_device]['py-obj']
-
-    @property
-    def PY_TYPE(self):
-        return CONFIG._configuration['places'][self.__name_device]['py-type']
-
-    @property
-    def UA_TYPE(self):
-        return CONFIG._configuration['places'][self.__name_device]['ua-type']
-
-    @property
-    def OBJECTS(self):
-        try:
-            objects = CONFIG._configuration['places'][self.__name_device]['objects']
-        except:
-            objects = []
-
-        return objects
-
+    def __init__(self,opc_type=None,entity=None):
+        super().__init__(section=PLACE_CONFIG._SECTION_PLACES,opc_type = opc_type,entity=entity)

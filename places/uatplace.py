@@ -9,7 +9,8 @@
 
 """
 
-import os,sys
+import os
+import sys
 
 from opcua import ua
 
@@ -23,9 +24,9 @@ from config.config import PLACE_CONFIG
 class uaTPlace(uaType):
 
     # tipos de lugares
-    PLACE           = "place"
-    BUFFER          = "buffer"
-    TRASH           = "trash"
+    PLACE           = "PlaceType"
+    BUFFER          = "BufferType"
+    TRASH           = "TrashType"
 
     #propriedades
     pID             = "Id"

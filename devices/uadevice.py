@@ -11,7 +11,8 @@ Classe generalistas dos dispositivos
 
 """
 
-import os,sys
+import os
+import sys
 import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
@@ -22,12 +23,16 @@ from opc.uaobject import uaObject
 from config.config import DEVICE_CONFIG
 from devices.workerdevice import WorkerDevice
 from devices.uatdevice import uaTDevice
+from client.uaclient import uaClient
 
 class uaDevice(uaObject):
 
     CONFIG  = DEVICE_CONFIG(uaTDevice.DEVICE)
 
     def __init__(self,parent,idx,name ):
+
+        if parent is None:
+            parent = uaClient.get_objects_node()
 
         super().__init__(parent,idx,name)
 
@@ -67,7 +72,7 @@ class uaDevice(uaObject):
         self._version.value = value
 
     def start_task(self):
-        self.logger.warn("Worker não implementado")
+        self.logger.warning("Worker não implementado")
 
     def loop_task(self):
         pass

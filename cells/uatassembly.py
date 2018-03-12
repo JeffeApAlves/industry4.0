@@ -9,7 +9,8 @@
 
 """
 
-import os,sys
+import os
+import sys
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
@@ -36,8 +37,7 @@ class uaTAssembly(uaTCell):
         Cria as propriedades
         """
 
-        return obj_type
-
+        return  obj_type
 
     @staticmethod
     def create_methods(obj_type,idx,handle):

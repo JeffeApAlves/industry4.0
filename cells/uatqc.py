@@ -9,13 +9,18 @@
 
 """
 
-import os,sys
+import os
+import sys
+import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import ua
 from cells.uatcell import uaTCell
 from config.config import CELL_CONFIG
+
+
+logger = logging.getLogger(__name__)
 
 class uaTQC(uaTCell):
 
@@ -27,6 +32,7 @@ class uaTQC(uaTCell):
         """
         Cria o tipo
         """
+        logger.info(uaTQC.CONFIG.OPC_TYPE)
 
         return  uaTCell.create_type(parent,idx,uaTQC,handle)
 
