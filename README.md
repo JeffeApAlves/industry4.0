@@ -1,26 +1,32 @@
 # Industry4.0
 
-Utilização do padrão OPC-UA para abstração de processo fabril
+Utilização do padrão OPC-UA para abstração de um processo fabril
 
 1. Instalar python 3.X
 
 2. Instalar  gerenciador de pacotes python (pip)
 
-3. Clonar o reposiiorio do projeto
+3. Clonar o reposiiório do projeto
 
-Dentro do diterotiro executar o comando
-    
+Dentro do diretório executar o comando
+
 ```shell    
 git clone https://github.com/JeffeApAlves/industry4.0.git
 ```
 
-4. Indicar o home (onde foi feito o clone)  do projeto no arquivo .bashrc exportando a variavel OPCUA_PROJECT_HOME
+4. Instalar dependencias do projeto
+
+```shell    
+pip install reqirements.txt
+```
+
+4. Exportar a váriavel (OPCUA_PROJECT_HOME) indicando o home do projeto (onde foi feito o clone) Para isso adicionar a linha abaixo no arquivo .bashrc.
 
 ``` shell
 export OPCUA_PROJECT_HOME=$WORK_SPACE/industry40
 ```
 
-5. Carregar o bash do projeto onde ficarão algumas definições , alias etc
+5. Carregar o script do projeto onde ficarão algumas definições , alias etc. Para isso adicionar a linha abaixo no arquivo .bashrc.
 
 ``` shell
 $ source $OPCUA_PROJECT_HOME/tools/opcua.sh
@@ -28,7 +34,7 @@ $ source $OPCUA_PROJECT_HOME/tools/opcua.sh
 
 6. Criar um ambiente virtual python (opcua)
 
-[Tutorial](https://jeffeapalves.github.io/edocs/python_enviroment.html)
+Seguir esse [Tutorial](https://jeffeapalves.github.io/edocs/python_enviroment.html)
 
 7. Cirar um usuário de sistema (opcua)
 
@@ -72,4 +78,3 @@ Configurar o ip e o diretorio de trabalho respectivo do device ou server no arqu
 ``` shell
 $ opcua-manage deploy
 ```
-
