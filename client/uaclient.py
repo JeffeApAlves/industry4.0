@@ -113,3 +113,12 @@ class uaClient(object):
         """
     
         return uaObject(uaClient.get_objects_node(),uaClient.__idx,name)
+
+
+    @staticmethod
+    def call_method(method,*args):
+
+        obj_name,method = method.split(".")
+
+        obj = uaClient.get_object(obj_name)
+        obj.call(method)

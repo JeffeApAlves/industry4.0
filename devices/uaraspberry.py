@@ -34,9 +34,9 @@ tlmsys  = TlmSyS()
 
 class uaRaspBerry(uaDevice):
 
-    def __init__(self,idx,name):
+    def __init__(self,idx,name,event_loop):
 
-        super().__init__(None,idx,name)
+        super().__init__(None,idx,name,event_loop)
 
         self.logger = logging.getLogger(__name__)
     
@@ -78,30 +78,26 @@ class uaRaspBerry(uaDevice):
     def harddisk(self, value):
         self._harddisk.value = value
 
-    def start_task(self):
-        """
-        Executado na inicialização da thread
-        """
-
-        self.host =  get_ip_address("wlan0")
-
-
-    def loop_task(self):        
+ 
+    async def loop_task(self):        
         """
         Execuatado em loop infinito da thread
         """
         
-        memory              = tlmsys.memory
-        temperature         = tlmsys.temperature
-        hd                  = tlmsys.harddisk[0]
-        cpu                 = tlmsys.cpu
+        self.host =  get_ip_address("wlan0")
 
-        self.temperature    = temperature
-        self.memory         = memory
-        self.harddisk       = hd
-        self.cpu            = cpu
+        while True:
+            memory              = tlmsys.memory
+            temperature         = tlmsys.temperature
+            hd                  = tlmsys.harddisk[0]
+            cpu                 = tlmsys.cpu
 
-        self.logger.info("tlm: memory:{} temperature:{} hd:{} cpu:{}".format(memory,temperature,hd,cpu))
+            self.temperature    = temperature
+            self.memory         = memory
+            self.harddisk       = hd
+            self.cpu            = cpu
+
+            self.logger.info("tlm: memory:{} temperature:{} hd:{} cpu:{}".format(memory,temperature,hd,cpu))
 
 
     @staticmethod

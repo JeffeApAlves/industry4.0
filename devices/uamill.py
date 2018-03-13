@@ -26,9 +26,9 @@ from config.config import DEVICE_CONFIG
 class uaMill(uaDevice):
 
 
-    def __init__(self,idx,name):
+    def __init__(self,idx,name,event_loop):
 
-        super().__init__(None,idx,name)
+        super().__init__(None,idx,name,event_loop)
         
         
     @staticmethod

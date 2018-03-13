@@ -64,17 +64,6 @@ class uaObject(object):
     def value(self, val):
         self._node.set_value(val)
 
-    def call(self,method_name, *args):
-        """
-        Executa um método do objeto
-        """
-
-        method = self.get_child(method_name)
- 
-        result_variants = self._node.call_method( method, *args )
-
-        return result_variants
-
 
     def get_child(self,name):
         """
@@ -99,14 +88,24 @@ class uaObject(object):
 
         path = [":".join([str(idx),name]),]
 
-        if parent is not None:
-            try:
-                node = parent.get_child(path)
-                self.logger.info("Objeto {} encontrado em {}: Node {}".format(path,parent,node))
-            except:
-                self.logger.error("Não foi encontrado {} em  Parent {} - Children:".format(path,parent))
-                node = None
+        try:
+            node = parent.get_child(path)
+            self.logger.info("Objeto {} encontrado em {}: Node {}".format(path,parent,node))
+        except:
+            self.logger.error("Não foi encontrado {} em  Parent {} - Children:".format(path,parent))
+            node = None
 
-        else:
-            self.logger.error("Parent nulo Path {}".format(path))
         return node
+
+
+    def call(self,method_name, *args):
+        """
+        Executa um método do objeto
+        """
+
+        method = self.get_child(method_name)
+ 
+        result_variants = self._node.call_method( method, *args )
+
+        return result_variants
+

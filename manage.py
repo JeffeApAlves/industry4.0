@@ -16,6 +16,7 @@ import os
 import locale
 import click
 import time
+import asyncio
 from distutils import *
 
 import logging
@@ -46,6 +47,8 @@ except ImportError:
 
 locale.setlocale(locale.LC_ALL, '')
 
+
+event_loop = asyncio.get_event_loop()
 
 @click.group()
 @click.option('-v','--verbose', type =click.Choice(['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']), default=None)
@@ -142,33 +145,25 @@ def device(type,idx,name):
 
     try:
         
-        logger.info("Iniciando o dispositivo")
-
         uaClient.connect()
+        
+        class_type = CONFIG.choice_to_classe(type)
 
-        logger.info("Client conectado")
-
-
-        logger.info("Iniciando dispositivo ...")
-
-        Factory.create_entity(idx,name,CONFIG.choice_to_classe(type))
-
-        logger.info("Dispositivo iniciado com sucesso")
+        Factory.create_device(idx,name,class_type,event_loop)
 
     except IOError as e:
-        #print(e)
-        logger.error("Erro ao tentar conectar no servidor opcua !")
+        print(e)
+        logger.error("Erro ao tentar criar se conectar no servidor opcua !")
         uaClient.disconnect()
-
-
 
     click.echo("Pressione [Ctrl+c] para interronper a execução\n")
 
     try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
+        event_loop.run_forever()
+    except (asyncio.CancelledError , KeyboardInterrupt ):
         pass
+    finally:
+        event_loop.close()
 
     uaClient.disconnect()
 

@@ -7,7 +7,7 @@
 @date    2018-03-02
 @version 0.1
 
-Classe de abstrata para os locais
+Cria os nodes no servidor opc-ua
 
 """
 
@@ -16,7 +16,6 @@ import sys
 import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
-sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 
 from opcua import ua
 from opc.uatype import uaType
@@ -30,7 +29,6 @@ logger = logging.getLogger(__name__)
 
 class uaModel(object):
 
-
     @staticmethod
     def create(server,idx):
         """
@@ -38,7 +36,6 @@ class uaModel(object):
         """
               
         uaModel.__create_type(server,idx)
-
         uaModel.__create_objects(server,idx)    
 
 
@@ -50,16 +47,20 @@ class uaModel(object):
 
         types       = Factory.get_list_types()
 
-        # node de objetos no opcua
+        # node de tipos no opcua
         uatypes     = server.get_base_objectType_node()
  
-        logger.info("Criando os tipos: {}".format(types))
+        try:
+                
+            for t in types:
 
-        for t in types:
+                # cria os tipos de objeto/variaveis no servidor opcua
+                ua_type = Factory.create_type(uatypes,idx,t) 
 
-            # cria os tipos de objeto/variaveis no servidor opcua
-            ua_type = Factory.create_type(uatypes,idx,t) 
+                logger.info("Criado o tipo: {} {}".format(t,ua_type))
 
+        except :
+            logger.error("Problema ao cria os tipos {}".format(types))
 
     @staticmethod
     def __create_objects(server,idx):
@@ -67,31 +68,30 @@ class uaModel(object):
         Cria os objetos no servidor OPC-UA
         """
 
+
+        # node de todos os objetos (parent)                
+        objects     = server.get_objects_node()
+
+        # node dos tipos
+        uatypes     = server.get_base_objectType_node()
+
+        # lista de objetos a serem criados
+        obj_list    = CONFIG.get_objects()
+
         try:
 
-            # node de todos os objetos (parent)                
-            objects     = server.get_objects_node()
+            for name_obj in obj_list:
 
-            # node dos tipos
-            uatypes     = server.get_base_objectType_node()
-    
-            # lista de objetos a serem criados
-            obj_list    = CONFIG.get_objects()
+                config  = CONFIG(entity=name_obj)
 
+                path    =  [ ":".join( [str(idx), config.INHERIT ] ) , ":".join( [str(idx), config.OPC_TYPE ] ) ] 
 
-            for key in obj_list:
-
-                config = CONFIG(entity=key)
-
-                path =  [ ":".join( [str(idx), config.INHERIT ] ) , ":".join( [str(idx), config.OPC_TYPE ] ) ] 
-
-                opc_type = uatypes.get_child(path)
+                type    = uatypes.get_child(path)
 
                 # cria no servidor opc os objetos
-                objects.add_object(idx, key , opc_type.nodeid)
+                objects.add_object(idx, name_obj , objecttype = type.nodeid)
 
-                logger.info("Criado objeto {} do tipo {} em {}".format( key , opc_type , objects))
+                logger.info("Criado com sucesso objeto {} do tipo {} em {}".format( name_obj , type , objects))
 
         except :
-            #print(e)
-            logger.error("Parametros key {}  path {} incorretos para criação dos objetos".format(key,path))
+            logger.error("Parametros Nome do objeo {} Path {} incorretos para criação dos objetos".format(name_obj,path))

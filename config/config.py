@@ -134,7 +134,6 @@ class CONFIG(object):
         return device
 
 
-
     @staticmethod
     def get_name_devices_choice():
         """

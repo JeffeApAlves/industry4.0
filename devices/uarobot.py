@@ -14,6 +14,7 @@ Entidade Robot
 import os
 import sys
 import logging
+import asyncio
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
@@ -30,11 +31,13 @@ from config.config import DEVICE_CONFIG
 
 class uaRobot(uaDevice):
 
-    def __init__(self,idx,name):
+    def __init__(self,idx,name,event_loop):
 
         self.logger = logging.getLogger(__name__)
 
-        super().__init__(None,idx,name)
+        self._task_temp = None
+
+        super().__init__(None,idx,name,event_loop)
 
         
     @staticmethod
@@ -52,10 +55,44 @@ class uaRobot(uaDevice):
 
 
     def create_handler(self,name):
+        """
+        Retorna um objeto handler criado que irá fazer o processamento dos eventos 
+        """
+
 
         class_handler = globals()[name]
 
-        return class_handler()
+        return class_handler(self)
+
+
+    def temperature_notification(self, node, val, data):
+
+        future = asyncio.Future(loop= self._event_loop)
+
+        self._task_temp = asyncio.ensure_future(self.hello_world(future,node,val,data),loop = self._event_loop)
+
+        self._task_temp.add_done_callback(self.got_result)
+
+
+    @asyncio.coroutine
+    def hello_world(self,future,node,val,data):
+
+
+        print("Hello World!")
+  
+        # uaClient.call_method("RB3")
+        # rb3.call(uaTRaspBerry.mSHUTDOWN)
+
+        future.set_result((node,val,data))
+
+        return future
+
+
+    def got_result(self,future):
+
+        print(future.result())
+        self._task_temp.stop()
+
 
 
 class HandleMethods(object):
@@ -83,22 +120,18 @@ class HandleMethods(object):
 
 class HandlerTemperature(object):
 
-    def __init__(self):
 
-        self.logger = logging.getLogger(__name__)
+    def __init__(self,device):
+
+        self._device    = device
+        self.logger     = logging.getLogger(__name__)
+
 
     def datachange_notification(self, node, val, data):
         
         print("Temperature {} - New data change event\n".format(val))
 
-
-        #self.logger.info("Encontrado 3 !!!!!!!!!!! {}".format(uaClient.get_object("Robot2").node))
-
-        #input("Chegou")****************************************************************************************************************************************************
-
-        #rb3 = uaClient.get_object("RB3")
-        
-        #rb3.call(uaTRaspBerry.mSHUTDOWN)
+        self._device.temperature_notification(node,val,data)
 
     
     def event_notification(self, event):
@@ -107,8 +140,16 @@ class HandlerTemperature(object):
 
 class HandlerCPU(object):
 
+    def __init__(self,device):
+
+        self._device    = device
+        self.logger     = logging.getLogger(__name__)
+
     def datachange_notification(self, node, val, data):
         print("CPU {} - New data change event\n".format(val))
 
+
     def event_notification(self, event):
         print("CPU-New event\n")
+
+

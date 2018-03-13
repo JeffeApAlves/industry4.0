@@ -13,6 +13,7 @@ Classe generalistas dos dispositivos
 
 import os
 import sys
+import asyncio
 import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
@@ -21,29 +22,29 @@ from opcua import uamethod
 
 from opc.uaobject import uaObject
 from config.config import DEVICE_CONFIG
-from devices.workerdevice import WorkerDevice
 from devices.uatdevice import uaTDevice
 from client.uaclient import uaClient
 
 class uaDevice(uaObject):
 
-    def __init__(self,parent,idx,name ):
+    def __init__(self,parent,idx,name,event_loop ):
 
+        # default node de objetos
         if parent is None:
             parent = uaClient.get_objects_node()
 
         super().__init__(parent,idx,name)
 
-        self.logger = logging.getLogger(__name__)
-
+        self.logger     = logging.getLogger(__name__)
+        self._event_loop= event_loop
 
         self._host      = uaObject(self.node,idx,uaTDevice.pHOST)
         self._version   = uaObject(self.node,idx,uaTDevice.pVERSION)
         self._model     = uaObject(self.node,idx,uaTDevice.pMODEL)
         self._sn        = uaObject(self.node,idx,uaTDevice.pSN)
-
+        self.__task     = self.create_task()
         # cria o worker para o dispositivo
-        WorkerDevice(self)
+        #WorkerDevice(self)
 
     @property
     def model(self):
@@ -69,11 +70,32 @@ class uaDevice(uaObject):
     def version(self, value):
         self._version.value = value
 
-    def start_task(self):
-        self.logger.warning("Worker não implementado")
 
-    def loop_task(self):
-        pass
+    async def loop_task(self):
+
+        while True:
+            
+            await asyncio.sleep(10)
+            
+            self.logger.warning("Worker não implementado")
+
+    def create_task(self):
+
+        try:
+            task = asyncio.ensure_future(self.loop_task())
+
+
+            self.logger.info("Task do dispositivo criado com sucesso")
+
+        except IOError as e:
+            self.logger.error("Erro na criação da Task do dispositivo")
+            print(e)
+
+        return task
+
+
+    def stop(self):
+        self.__task.cancel()
 
     @staticmethod
     def create(parent,idx,handle=None):

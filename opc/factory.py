@@ -61,7 +61,7 @@ class Factory(object):
 
         class_type = Factory.get_config(opc_type).TYPE
 
-        return str_to_class(class_type)
+        return  str_to_class(class_type)
 
 
     @staticmethod
@@ -72,7 +72,7 @@ class Factory(object):
 
         class_entity = Factory.get_config(opc_type).ENTITY
 
-        return str_to_class(class_entity)
+        return  str_to_class(class_entity)
 
     @staticmethod
     def get_config(opc_type=None,entity=None):
@@ -80,7 +80,7 @@ class Factory(object):
         Retorna a configuração respectiva do tipo
         """
 
-        return CONFIG(opc_type = opc_type , entity=entity)
+        return  CONFIG(opc_type = opc_type , entity=entity)
 
     @staticmethod
     def get_name_objects():
@@ -88,7 +88,35 @@ class Factory(object):
         Retorna a lista de objetos a serem criados
         """
 
-        return CONFIG.get_name_objects()
+        return  CONFIG.get_name_objects()
+
+
+    @staticmethod
+    def create_device(idx,name,opc_type,event_loop):
+        """
+        Cria um objeto python de um dispositivo do tipo <type> com o nome <name> e vincula com o objeto correspondente no OPC-UA
+        """
+
+        try:
+
+            logger.info("Iniciando dispositivo ...")
+
+
+            class_of_entity = Factory.get_entity_class(opc_type)
+
+            # instancia o objeto
+            device      = class_of_entity(idx,name,event_loop)
+
+            # cria os eventos
+            Factory.__create_data_change_events(idx,device)
+
+    
+            logger.info("Dispositivo iniciado com sucesso")
+
+        except IOError as e:
+            device = None
+            logger.warning("Não foi possível criar o dispositivo {}\nI/O error({0}): {1}".format(name,e.errno, e.strerror))
+
 
     @staticmethod
     def create_entity(idx,name,opc_type):
@@ -102,16 +130,14 @@ class Factory(object):
             # instancia o objeto
             py_obj      = class_of_entity(idx,name)
 
-            Factory.create_data_change_events(idx,py_obj)
-            
-            #self.logger.info("Sucesso Dispositivo {} criado class {}".format(name,class_of_entity.__name__))    
+            # cria os eventos
+            Factory.__create_data_change_events(idx,py_obj)
 
         except IOError as e:
             py_obj = None
             logger.warning("Não foi possível criar o dispositivo {}\nI/O error({0}): {1}".format(name,e.errno, e.strerror))
 
         return  py_obj
-
 
     @staticmethod
     def create_type(parent,idx,opc_type):
@@ -124,11 +150,9 @@ class Factory(object):
 
             logger.info("Inicio criando tipo {}-{} !".format(opc_type,class_of_entity.__name__))
                
-
+            # cria o tipo de objeto
             type_obj        = class_of_entity.create(parent,idx)
 
-            #self.logger.info("Sucesso Parent {} - Tipo {} class {} chied {}".format(parent,opc_type,class_of_entity.__name__,type_obj))    
-        
         except IOError as e:
 
             type_obj = None
@@ -138,7 +162,7 @@ class Factory(object):
         return type_obj
 
     @staticmethod
-    def create_data_change_events(idx,entity_obj):
+    def __create_data_change_events(idx,entity_obj):
         """
         Cria eventos para o objeto
         """
@@ -150,7 +174,7 @@ class Factory(object):
 
             for e in all_events:
                 
-                n_obj,n_var     = e['data-source'].split(".")
+                n_obj,n_var     = e['data-source'].split(":")
                 priority        = e['priority']
                 name_handler    = e['handler']
 

@@ -27,9 +27,9 @@ class uaTBarCodeReader(uaTDevice):
     OPC_TYPE        = uaTDevice.BAR_CODE_READER
 
 
-    def __init__(self,idx,name):
+    def __init__(self,idx,name,event_loop):
 
-        super().__init__(None,idx,name)
+        super().__init__(None,idx,name,event_loop)
         
         
     @staticmethod
