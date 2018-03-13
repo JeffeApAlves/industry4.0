@@ -22,7 +22,7 @@ from config.config import PLACE_CONFIG
 class uaTTrash(uaTPlace):
 
 
-    CONFIG      = PLACE_CONFIG(uaTPlace.TRASH)
+    OPC_TYPE    = uaTPlace.TRASH
 
 
     @staticmethod

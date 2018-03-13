@@ -161,6 +161,8 @@ class Factory(object):
 
                 logger.info("Sucesso evento data change do {} registrado em {}".format(entity_obj.display_name,var))
 
-        except :
+        except IOError as e:
+
+            print(e)
 
             logger.warning("Não foi encontrado eventos para esse objeto {}".format(entity_obj))

@@ -23,8 +23,6 @@ from config.config import CELL_CONFIG
 
 class uaCell(uaObject):
 
-    CONFIG          = CELL_CONFIG(uaTCell.CELL) 
-
     @staticmethod
     def create(parent,idx,handle=None):
         """

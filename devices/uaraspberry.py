@@ -34,9 +34,6 @@ tlmsys  = TlmSyS()
 
 class uaRaspBerry(uaDevice):
 
-
-    CONFIG              = DEVICE_CONFIG(uaTDevice.RASPBERRY)
-
     def __init__(self,idx,name):
 
         super().__init__(None,idx,name)

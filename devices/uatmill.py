@@ -26,7 +26,7 @@ class uaTMill(uaTDevice):
     mCLOSE          = "close_protection"
     mMAKE_PART      = "make_part"
 
-    CONFIG          = DEVICE_CONFIG(uaTDevice.MILL)
+    OPC_TYPE    = uaTDevice.MILL
 
     @staticmethod
     def create(parent,idx,handle=None):

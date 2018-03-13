@@ -21,7 +21,7 @@ from config.config import PLACE_CONFIG
 class uaTBuffer(uaTPlace):
 
 
-    CONFIG      = PLACE_CONFIG(uaTPlace.BUFFER)
+    OPC_TYPE    = uaTPlace.BUFFER
 
 
     @staticmethod

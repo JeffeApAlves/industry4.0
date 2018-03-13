@@ -33,7 +33,7 @@ class uaTPlace(uaType):
     pMAX            = "Max"
     pFREE           = "Free"
 
-    CONFIG          = PLACE_CONFIG(PLACE)
+    OPC_TYPE        = PLACE
 
 
     @staticmethod

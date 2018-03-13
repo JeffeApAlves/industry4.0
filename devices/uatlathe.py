@@ -27,7 +27,8 @@ class uaTLathe(uaTDevice):
     mCLOSE      = "close_protection"
     mMAKE_PART  = "make_part"
 
-    CONFIG      = DEVICE_CONFIG(uaTDevice.LATHE)
+
+    OPC_TYPE    = uaTDevice.LATHE
 
     @staticmethod
     def create(parent,idx,handle=None):

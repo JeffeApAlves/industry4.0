@@ -64,7 +64,6 @@ class uaObject(object):
     def value(self, val):
         self._node.set_value(val)
 
-
     def call(self,method_name, *args):
         """
         Executa um método do objeto

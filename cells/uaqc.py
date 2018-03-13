@@ -25,8 +25,6 @@ from config.config import CELL_CONFIG
 
 class uaQC(uaCell):
 
-    CONFIG   = CELL_CONFIG(uaTCell.QUALITY_CONTROL)
-
 
     @staticmethod
     def create(parent,idx,handle=None):

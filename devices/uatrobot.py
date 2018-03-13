@@ -28,7 +28,7 @@ class uaTRobot(uaTDevice):
     mGET_PART       = "get_part"
     mPUT_PART       = "put_part"
            
-    CONFIG          = DEVICE_CONFIG(uaTDevice.ROBOT)
+    OPC_TYPE        = uaTDevice.ROBOT
 
     @staticmethod
     def create(parent,idx,handle=None):

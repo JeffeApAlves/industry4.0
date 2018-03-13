@@ -25,9 +25,6 @@ from config.config import CELL_CONFIG
 
 class uaStorage(uaCell):
 
-    CONFIG   = CELL_CONFIG(uaTCell.STORAGE)
-
-
     @staticmethod
     def create(parent,idx,handle=None):
         """

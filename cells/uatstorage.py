@@ -20,7 +20,7 @@ from config.config import CELL_CONFIG
 
 class uaTStorage(uaTCell):
 
-    CONFIG = CELL_CONFIG(uaTCell.STORAGE)
+    OPC_TYPE    = uaTCell.STORAGE
 
     @staticmethod
     def create(parent,idx,handle=None):

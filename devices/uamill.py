@@ -26,9 +26,6 @@ from config.config import DEVICE_CONFIG
 class uaMill(uaDevice):
 
 
-    CONFIG      = DEVICE_CONFIG(uaTDevice.MILL)
-
-
     def __init__(self,idx,name):
 
         super().__init__(None,idx,name)

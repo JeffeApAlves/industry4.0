@@ -25,7 +25,7 @@ class uaTCoveyor(uaTDevice):
     mON         = "on"
     mOFF        = "off"
 
-    CONFIG      = DEVICE_CONFIG(uaTDevice.COVEYOR)
+    OPC_TYPE    = uaTDevice.COVEYOR
 
 
     @staticmethod

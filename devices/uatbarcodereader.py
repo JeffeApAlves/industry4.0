@@ -22,10 +22,9 @@ from config.config import DEVICE_CONFIG
 class uaTBarCodeReader(uaTDevice):
 
     # metodos OPC-UA
-    mREAD_BARCODE       = "read_barcode"
+    mREAD_BARCODE   = "read_barcode"
 
-
-    CONFIG              = DEVICE_CONFIG(uaTDevice.BAR_CODE_READER)
+    OPC_TYPE        = uaTDevice.BAR_CODE_READER
 
 
     def __init__(self,idx,name):

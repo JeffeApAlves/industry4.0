@@ -7,7 +7,7 @@
 @date    2018-03-02
 @version 0.1
 
-Carrega as configurações do arquivo
+Carrega e popula as configurações dos arquivos .conf
 
 """
 
@@ -23,7 +23,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 class CONFIG(object):
     """
-    Configurações gerias e comuns
+    Configurações gerais e comuns
     """
 
     _OPC_SERVER_SECTION     = "opcua-server"
@@ -83,13 +83,21 @@ class CONFIG(object):
         self._section           = section
         self._entity            = entity
         self._opc_type          = opc_type
+        
         self._config_entity     = None
         self._config_type       = None
 
+        
         if entity is not None:
 
+            # nome do objeto
+            if type(entity) is str:
+                name_entity = entity
+            else:
+                name_entity = entity.display_name
+
             # configuração especifica do objeto
-            self._config_entity = CONFIG.__objects[entity]
+            self._config_entity = CONFIG.__objects[name_entity]
             
             # atualiza o tipo conforme o objeto
             self._opc_type      = self._config_entity[CONFIG._TYPE]
@@ -97,25 +105,28 @@ class CONFIG(object):
             # atualiza o diretorio de trabalho
             CONFIG.HOMEDIR      = self._config_entity[CONFIG._HOMEDIR] 
 
+
         # sessão não definida então procura no conf baseado no opc_type  
         if section is None:
             self._section       = self.search_section()
 
         # configuração especifica do tipo
         if self._opc_type is not None:
+            
             self._config_type   = CONFIG._configuration[self._section][self._opc_type] 
 
 
     @staticmethod
     def choice_to_classe(choice):
         """
-        TODO: verificar funcionamento
+        Retorna a classe respectiva da opção de dispositivo
         """
         
         devices = CONFIG._configuration[CONFIG._SECTION_DEVICES]
 
         for key in devices:
             if choice == devices[key]['choice']:
+                device = key
                 break
         else:
             device = ""
@@ -125,23 +136,23 @@ class CONFIG(object):
 
 
     @staticmethod
-    def get_list_device_choice():
+    def get_name_devices_choice():
         """
-        Retorna a lista de opçoes
+        Retorna a lista de opções de dispositivos usada  no CL 
         """
         
-        devices = CONFIG.get_list_devices()
-
         choices = []
 
-        for d in devices:
-            if d != "---":
-                choices.append(d)
+        devices = CONFIG._configuration[CONFIG._SECTION_DEVICES]
+
+        for key in devices:
+            if key != "---":
+                choices.append(devices[key]['choice'])
 
         return choices
 
     @staticmethod
-    def get_list_devices():
+    def get_name_devices():
         return list(CONFIG._configuration[CONFIG._SECTION_DEVICES].keys())
 
     @staticmethod
@@ -203,7 +214,7 @@ class CONFIG(object):
 
 class OPCUA_SERVER_CONFIG(CONFIG):
     '''
-    Configurações relacionadas ao servidor OPCUA
+    Configurações especificas ao servidor OPCUA
     '''
 
     def __init__(self):
@@ -220,22 +231,22 @@ class OPCUA_SERVER_CONFIG(CONFIG):
     # END_POINT  = "opc.tcp://{}:{}/freeopcua/server/".format(OPCUA_SERVER_CONFIG.HOST,OPCUA_SERVER_CONFIG.PORT)
     URL     = "opc.tcp://{}@{}:{}/freeopcua/server/".format(getpass.getuser(),HOST,PORT)
 
-
-
 class DEVICE_CONFIG(CONFIG):
+    """ Configurações especificas ao tipo Device"""
 
     def __init__(self,opc_type=None,entity=None):
         super().__init__(section = DEVICE_CONFIG._SECTION_DEVICES,opc_type = opc_type,entity=entity)
 
 
 class CELL_CONFIG(CONFIG):
+    """ Configurações especificas ao tipo Cell"""
 
     def __init__(self,opc_type=None,entity=None):
         super().__init__(section=CELL_CONFIG._SECTION_CELLS,opc_type = opc_type,entity=entity)
 
 
 class PLACE_CONFIG(CONFIG):
-
+    """ Configurações especificas ao tipo Place"""
 
     def __init__(self,opc_type=None,entity=None):
         super().__init__(section=PLACE_CONFIG._SECTION_PLACES,opc_type = opc_type,entity=entity)

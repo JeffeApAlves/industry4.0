@@ -48,9 +48,11 @@ $ opcua-manage --help
 
 * Editar o arquivo ./industry40.conf adicionando o novo tipo
 
-* Adicionar , na classe generalista (uaTXXX),  uma constante com o nome que foi usado no arquivo conf
+* Mapear , na classe generalista (uaTXXX),  uma constante do string com o nome que foi usado no arquivo .conf
 
-* Implemetar as classes do novo tipo uaTXXX  (create) e uaXXX (create) (create_methods,create_pro,create)
+* Implemetar a classe (uaTXXX) que descreve/cria o novo tipo o servidor opcua. Metodos: 'create_methods' ,'create_propert', 'create' , 'create_methods' 
+
+* Implemetar a classe que será aentidade do novo tipo uaXXX   metodos: 'create' e outros especifico ao que cada uma representa
 
 11. Para criar novos objetos editar o arquivo ./config/objects.conf
 

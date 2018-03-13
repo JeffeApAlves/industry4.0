@@ -25,7 +25,8 @@ class uaTVision(uaTDevice):
 
     mCHECK_PART     = "check_part"
 
-    CONFIG          = DEVICE_CONFIG(uaTDevice.VISION)
+    OPC_TYPE        = uaTDevice.VISION
+
 
     @staticmethod
     def create(parent,idx,handle=None):

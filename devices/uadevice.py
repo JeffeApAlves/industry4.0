@@ -27,8 +27,6 @@ from client.uaclient import uaClient
 
 class uaDevice(uaObject):
 
-    CONFIG  = DEVICE_CONFIG(uaTDevice.DEVICE)
-
     def __init__(self,parent,idx,name ):
 
         if parent is None:

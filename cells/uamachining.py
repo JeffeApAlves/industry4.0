@@ -24,7 +24,6 @@ from config.config import CELL_CONFIG
 
 class uaMachining(uaCell):
 
-    CONFIG   = CELL_CONFIG(uaTCell.MACHINING)
 
     @staticmethod
     def create(parent,idx,handle=None):

@@ -34,7 +34,7 @@ class uaTRaspBerry(uaTDevice):
     mSHUTDOWN       = "shutdown"
     mRESET          = "reset"
 
-    CONFIG          = DEVICE_CONFIG(uaTDevice.RASPBERRY)
+    OPC_TYPE        = uaTDevice.RASPBERRY
 
 
     @staticmethod

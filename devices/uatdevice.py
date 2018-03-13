@@ -42,7 +42,7 @@ class uaTDevice(uaType):
     mDEINIT         = "deinit"
     mINIT           = "init"
 
-    CONFIG          = DEVICE_CONFIG(DEVICE)
+    OPC_TYPE        = DEVICE
 
     @staticmethod
     def get_list():

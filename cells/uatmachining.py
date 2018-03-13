@@ -20,7 +20,7 @@ from config.config import CELL_CONFIG
 
 class uaTMachining(uaTCell):
 
-    CONFIG = CELL_CONFIG(uaTCell.MACHINING)
+    OPC_TYPE    = uaTCell.MACHINING
 
     @staticmethod
     def create(parent,idx,handle=None):

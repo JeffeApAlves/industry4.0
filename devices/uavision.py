@@ -24,8 +24,6 @@ from config.config import DEVICE_CONFIG
 
 class uaVision(uaDevice):
 
-    CONFIG      = DEVICE_CONFIG(uaTDevice.VISION)
-
     @staticmethod
     def create(parent,idx,handle=None):
         """

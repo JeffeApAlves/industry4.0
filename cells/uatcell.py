@@ -27,7 +27,7 @@ class uaTCell(uaType):
     ASSEMBLY        = "AssemblyType"
     MACHINING       = "MachiningType"
 
-    CONFIG          = CELL_CONFIG(CELL)
+    OPC_TYPE        = CELL
 
     @staticmethod
     def get_list():

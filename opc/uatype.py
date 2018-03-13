@@ -16,6 +16,7 @@ import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
+from config.config import CONFIG
 
 logger = logging.getLogger(__name__)
 
@@ -28,15 +29,16 @@ class uaType(object):
         Adiciona <parent> , um child do tipo indicado por <type>
         """
 
-        opc_type = type.CONFIG.OPC_TYPE
-
+       # opc_type =  CONFIG(entity=type).OPC_TYPE
+        
+        opc_type = type.OPC_TYPE
 
         try:
             child = parent.get_child(":".join([str(idx), opc_type ]))
         except:
 
             try:
-                child = parent.add_object_type(idx,opc_type )
+                child = parent.add_object_type(idx, opc_type )
 
                 # cria metodos do proriedades
                 type.create_property(child,idx )
@@ -68,3 +70,5 @@ class uaType(object):
         Cria os metodos
         """
         pass
+
+

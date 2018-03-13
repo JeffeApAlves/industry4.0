@@ -23,8 +23,6 @@ from config.config import PLACE_CONFIG
 
 class uaBuffer(uaPlace):
 
-    CONFIG   = PLACE_CONFIG(uaTPlace.BUFFER)
-
     @staticmethod
     def create(parent,idx,handle=None):
 

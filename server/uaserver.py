@@ -41,14 +41,18 @@ class uaServer(object):
         if name is None:
             name = OPCUA_SERVER_CONFIG.NAME
 
+
+        logger.info("url: {}".format(url))
+        logger.info("name: {}".format(name))
+        logger.info("xml: {}".format(xml))
+        logger.info("certificate: {}".format(certificate))
+        logger.info("private key: {}".format(private_key))
+        logger.info("clock: {}".format(disable_clock))
+
         uaServer.__SERVER = Server()
-
         uaServer.__SERVER.set_endpoint(url)
-
         uaServer.__SERVER.set_server_name(name)
-        
         uaServer.__SERVER.disable_clock(disable_clock)
-
         idx = uaServer.__SERVER.register_namespace(OPCUA_SERVER_CONFIG.URI)
 
         if certificate is not None:
@@ -82,15 +86,7 @@ class uaServer(object):
         Inicia o servidor
         """
 
-        try:
-            uaServer.__SERVER.start()
-
-            logger.info("Servidor iniciado com sucesso")
-
-        except IOError as e:
-        
-            logger.error("Problema ao iniciar o servidor\n {}".format(e))
-
+        uaServer.__SERVER.start()
 
     @staticmethod
     def stop():

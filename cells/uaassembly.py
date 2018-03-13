@@ -24,8 +24,6 @@ from config.config import CELL_CONFIG
 
 class uaAssembly(uaCell):
 
-    CONFIG   = CELL_CONFIG(uaTCell.ASSEMBLY)
-
     @staticmethod
     def create(parent,idx,handle=None):
         """

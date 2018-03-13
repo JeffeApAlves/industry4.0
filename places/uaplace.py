@@ -23,8 +23,6 @@ from config.config import PLACE_CONFIG
 
 class uaPlace(uaObject):
 
-    CONFIG          = PLACE_CONFIG(uaTPlace.PLACE) 
-
     @staticmethod
     def create(parent,idx,handle=None):
         """

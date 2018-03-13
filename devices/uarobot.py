@@ -30,8 +30,6 @@ from config.config import DEVICE_CONFIG
 
 class uaRobot(uaDevice):
 
-    CONFIG         = DEVICE_CONFIG(uaTDevice.ROBOT)
-
     def __init__(self,idx,name):
 
         self.logger = logging.getLogger(__name__)

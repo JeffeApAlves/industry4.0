@@ -24,15 +24,14 @@ logger = logging.getLogger(__name__)
 
 class uaTQC(uaTCell):
 
-    CONFIG = CELL_CONFIG(uaTCell.QUALITY_CONTROL)
-
+    OPC_TYPE    = uaTCell.QUALITY_CONTROL
 
     @staticmethod
     def create(parent,idx,handle=None):
         """
         Cria o tipo
         """
-        logger.info(uaTQC.CONFIG.OPC_TYPE)
+        logger.info(uaTQC.OPC_TYPE)
 
         return  uaTCell.create_type(parent,idx,uaTQC,handle)
 

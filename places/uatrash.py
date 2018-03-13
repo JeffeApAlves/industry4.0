@@ -23,8 +23,6 @@ from config.config import PLACE_CONFIG
 
 class uaTrash(uaPlace):
 
-    CONFIG   = PLACE_CONFIG(uaTPlace.TRASH)
-
     @staticmethod
     def create(parent,idx,handle=None):
 

@@ -37,29 +37,24 @@ class uaClient(object):
         Conecta ao servidor OPC-UA
         '''
 
-        try:
+        logger.info("Client conectando em {}".format(OPCUA_SERVER_CONFIG.HOST))
 
-            if uaClient.__Client is None:
+        # singleton 
+        if uaClient.__Client is None:
 
-                # Rntidade client
-                uaClient.__Client = Client(OPCUA_SERVER_CONFIG.URL)
+            # Rntidade client
+            uaClient.__Client = Client(OPCUA_SERVER_CONFIG.URL)
 
-                # Conectando ...
-                uaClient.__Client.connect()
+            # Conectando ...
+            uaClient.__Client.connect()
 
-                uaClient.__Objects = uaClient.__Client.get_objects_node() 
+            uaClient.__Objects = uaClient.__Client.get_objects_node() 
 
-                logger.info("Client conectado ao servidor OPC-UA")
-
-                logger.info("Children in objects: {}".format(uaClient.get_objects_node().get_children()))
-
-                logger.info("Encontrado 1 !!!!!!!!!!! {}".format(uaClient.get_objects_node().get_child(["1:RB3"])))
+            logger.info("Client conectado ao servidor OPC-UA")
+            logger.info("Children in objects: {}".format(uaClient.get_objects_node().get_children()))
+            logger.info("Encontrado 1 !!!!!!!!!!! {}".format(uaClient.get_objects_node().get_child(["1:RB3"])))
 
 
-        except :
-            logger.error("Erro ao tentar conectar no servidor opcua {} !".format(OPCUA_SERVER_CONFIG.HOST))
-            uaClient.disconnect()
-            
 
     @staticmethod
     def disconnect():
