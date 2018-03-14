@@ -20,7 +20,6 @@ from opcua import uamethod
 from devices.uatdevice import uaTDevice
 from devices.uadevice import uaDevice
 from devices.uatlathe import uaTLathe
-from config.config import DEVICE_CONFIG
 
 class uaLathe(uaDevice):
 

@@ -26,7 +26,6 @@ from devices.uatdevice import uaTDevice
 from devices.uadevice import uaDevice,HandlerEvents
 from devices.uatrobot import uaTRobot
 from devices.uatraspberry import uaTRaspBerry
-#from config.config import DEVICE_CONFIG
 
 
 class uaRobot(uaDevice):
@@ -66,20 +65,26 @@ class uaRobot(uaDevice):
 
         obj = uaClient.get_object("RB3")
 
-        print("I--------------Temperatura----------------------")
-        print("Objeto: {} ".format(obj))
-        print(node,val,data)
-        print("F-----------------------------------------------")
+        print("|--------------Temperatura----------------------")
+        print("| Objeto:{} ".format(obj))
+        print("| node   {} value {}".format(node.get_display_name().Text,val))
+        print("| Data   {}".format(data))
+        print("|-----------------------------------------------")
 
 
     def on_datachange_cpu(self, node, val, data):
 
-        obj = uaClient.get_object("RB3")
+        rb3 = uaClient.get_object("RB3")
 
-        print("I-------------CPU-------------------------------")
-        print("Objeto: {} ".format(obj))
-        print(node,val,data)
-        print("F-----------------------------------------------")
+        print("Teste")
+ 
+        rb3.call_method(uaTRaspBerry.mRESET)
+
+        print("|-------------CPU-------------------------------")
+        print("| Objeto:{} ".format(rb3))
+        print("| node   {} value {}".format(node.get_display_name().Text,val))
+        print("| Data   {}".format(data))
+        print("|-----------------------------------------------")
 
 
 class HandleMethods(object):
@@ -108,13 +113,6 @@ class HandleMethods(object):
 class HandlerTemperature(HandlerEvents):
 
 
-    def __init__(self,device):
-
-        super().__init__(device)
-
-        self.logger     = logging.getLogger(__name__)
-
-
     def datachange_notification(self, node, val, data):
 
 
@@ -122,7 +120,7 @@ class HandlerTemperature(HandlerEvents):
 
         HandlerEvents._event_loop.call_soon(method , node , val , data)
         
-        print("Data change event - Temperature {}".format(val))
+        self.logger.info("Criado evento(call_soon) Data change notification - Temperature {}".format(data))
 
     
     def event_notification(self, event):
@@ -131,18 +129,12 @@ class HandlerTemperature(HandlerEvents):
 
 class HandlerCPU(HandlerEvents):
 
-    def __init__(self,device):
-
-        super().__init__(device)
-
-        self.logger     = logging.getLogger(__name__)
-
 
     def datachange_notification(self, node, val, data):
         
         HandlerEvents._event_loop.call_soon(self._device.on_datachange_cpu,node, val, data)
         
-        print("Data change event - CPU {}".format(val))
+        self.logger.info("Criado evento(call_soon) Data change notification - CPU {}".format(data))
 
 
     def event_notification(self, event):

@@ -21,8 +21,6 @@ from cells.uacell import uaCell
 from cells.uatcell import uaTCell
 from cells.uatqc import uaTQC
 
-from config.config import CELL_CONFIG
-
 class uaQC(uaCell):
 
 

@@ -98,14 +98,27 @@ class uaObject(object):
         return node
 
 
-    def call(self,method_name, *args):
+    def call_method(self,method_name, *args):
         """
         Executa um método do objeto
         """
+        try:
 
-        method = self.get_child(method_name)
- 
-        result_variants = self._node.call_method( method, *args )
+            #method  = self.get_child( method_name )
 
-        return result_variants
+            method  = [":".join([str(self._idx),method_name])]
+
+            #result  = self._node.call_method( method , *args )
+
+            self.logger.info("Método {}.{} executado com sucesso".format(self.display_name,method_name))
+            
+        except IOError as e :
+
+            print(e)
+
+            self.logger.error("Não foi possível executar o método {}.{}".format(self.display_name,method_name))
+
+            result = None
+        
+        return result
 

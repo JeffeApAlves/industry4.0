@@ -21,7 +21,7 @@ from opcua import uamethod
 from devices.uatdevice import uaTDevice
 from devices.uatmill import uaTMill
 from devices.uadevice import uaDevice
-from config.config import DEVICE_CONFIG
+
 
 class uaMill(uaDevice):
 

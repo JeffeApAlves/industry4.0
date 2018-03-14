@@ -16,7 +16,6 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import ua
 from opc.uatype import uaType
-from config.config import CELL_CONFIG
 
 class uaTCell(uaType):
 

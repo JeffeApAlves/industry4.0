@@ -19,7 +19,6 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 from places.uaplace import uaPlace
 from places.uatplace import uaTPlace
 from places.uattrash import uaTTrash
-from config.config import PLACE_CONFIG
 
 class uaTrash(uaPlace):
 

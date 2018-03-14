@@ -20,7 +20,6 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 from cells.uacell import uaCell
 from cells.uatcell import uaTCell
 from cells.uatmachining import uaTMachining
-from config.config import CELL_CONFIG
 
 class uaMachining(uaCell):
 

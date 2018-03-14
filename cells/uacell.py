@@ -19,7 +19,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from cells.uatcell import uaTCell
 from opc.uaobject import uaObject
-from config.config import CELL_CONFIG
+
 
 class uaCell(uaObject):
 

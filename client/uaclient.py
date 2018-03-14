@@ -52,8 +52,6 @@ class uaClient(object):
 
             logger.info("Client conectado ao servidor OPC-UA")
             logger.info("Children in objects: {}".format(uaClient.get_objects_node().get_children()))
-            logger.info("Encontrado 1 !!!!!!!!!!! {}".format(uaClient.get_objects_node().get_child(["1:RB3"])))
-
 
 
     @staticmethod
@@ -113,12 +111,3 @@ class uaClient(object):
         """
     
         return uaObject(uaClient.get_objects_node(),uaClient.__idx,name)
-
-
-    @staticmethod
-    def call_method(method,*args):
-
-        obj_name,method = method.split(".")
-
-        obj = uaClient.get_object(obj_name)
-        obj.call(method)

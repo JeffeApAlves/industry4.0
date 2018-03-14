@@ -22,7 +22,7 @@ from opcua import uamethod
 from devices.uatdevice import uaTDevice
 from devices.uadevice import uaDevice
 from devices.uatcoveyor import uaTCoveyor
-from config.config import DEVICE_CONFIG
+
 
 class uaCoveyor(uaDevice):
 

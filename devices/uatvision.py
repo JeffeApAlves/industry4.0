@@ -19,7 +19,6 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 
 from opcua import ua
 from devices.uatdevice import uaTDevice
-from config.config import DEVICE_CONFIG
 
 class uaTVision(uaTDevice):
 

@@ -21,7 +21,6 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 from opcua import uamethod
 
 from opc.uaobject import uaObject
-from config.config import DEVICE_CONFIG
 from devices.uatdevice import uaTDevice
 from client.uaclient import uaClient
 
@@ -90,9 +89,7 @@ class uaDevice(uaObject):
     def create_periodic_update(self):
 
         try:
-            #task = asyncio.ensure_future(self.update(),loop=uaDevice._event_loop)
-
-            task = uaDevice._event_loop.create_task(self.update())
+            task = asyncio.ensure_future(self.update(),loop=uaDevice._event_loop)
 
             self.logger.info("Task-update do dispositivo criado com sucesso")
 
@@ -117,10 +114,6 @@ class uaDevice(uaObject):
         return  uaTDevice.create(parent,idx,handle)
 
 
-    def call_soon(self,callback, *args):
-        self._event_loop.call_soon(callback,args)
-
-
     @staticmethod
     def run_forever():
 
@@ -130,6 +123,8 @@ class uaDevice(uaObject):
             pass
         finally:
             uaDevice._event_loop.close()
+
+
 
 class HandleDevice(object):
     """

@@ -19,7 +19,6 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 from opcua import ua
 from opc.uaobject import uaObject
 from places.uatplace import uaTPlace
-from config.config import PLACE_CONFIG
 
 class uaPlace(uaObject):
 

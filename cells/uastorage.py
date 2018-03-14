@@ -21,7 +21,6 @@ from opcua import ua
 from cells.uacell import uaCell
 from cells.uatcell import uaTCell
 from cells.uatstorage import uaTStorage
-from config.config import CELL_CONFIG
 
 class uaStorage(uaCell):
 

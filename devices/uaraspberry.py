@@ -21,7 +21,6 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), ".."))
 from opcua import uamethod
 
 from opc.uaobject import uaObject
-from config.config import DEVICE_CONFIG
 from raspberry.tlmsys import TlmSyS
 from misc.net import get_ip_address
 from devices.uatdevice import uaTDevice
