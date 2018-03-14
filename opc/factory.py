@@ -92,7 +92,7 @@ class Factory(object):
 
 
     @staticmethod
-    def create_device(idx,name,opc_type,event_loop):
+    def create_device(idx,name,opc_type,event_loop=None):
         """
         Cria um objeto python de um dispositivo do tipo <type> com o nome <name> e vincula com o objeto correspondente no OPC-UA
         """

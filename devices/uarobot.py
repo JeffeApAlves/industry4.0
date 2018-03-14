@@ -23,19 +23,17 @@ from opcua import uamethod
 from client.uaclient import uaClient
 from opc.uaobject import uaObject
 from devices.uatdevice import uaTDevice
-from devices.uadevice import uaDevice
+from devices.uadevice import uaDevice,HandlerEvents
 from devices.uatrobot import uaTRobot
 from devices.uatraspberry import uaTRaspBerry
-from config.config import DEVICE_CONFIG
+#from config.config import DEVICE_CONFIG
 
 
 class uaRobot(uaDevice):
 
     def __init__(self,idx,name,event_loop):
 
-        self.logger = logging.getLogger(__name__)
-
-        self._task_temp = None
+        self.logger     = logging.getLogger(__name__)
 
         super().__init__(None,idx,name,event_loop)
 
@@ -59,40 +57,29 @@ class uaRobot(uaDevice):
         Retorna um objeto handler criado que irá fazer o processamento dos eventos 
         """
 
-
         class_handler = globals()[name]
 
         return class_handler(self)
 
 
-    def temperature_notification(self, node, val, data):
+    def on_datachange_temperature(self, node, val, data):
 
-        future = asyncio.Future(loop= self._event_loop)
+        obj = uaClient.get_object("RB3")
 
-        self._task_temp = asyncio.ensure_future(self.hello_world(future,node,val,data),loop = self._event_loop)
-
-        self._task_temp.add_done_callback(self.got_result)
-
-
-    @asyncio.coroutine
-    def hello_world(self,future,node,val,data):
+        print("I--------------Temperatura----------------------")
+        print("Objeto: {} ".format(obj))
+        print(node,val,data)
+        print("F-----------------------------------------------")
 
 
-        print("Hello World!")
-  
-        # uaClient.call_method("RB3")
-        # rb3.call(uaTRaspBerry.mSHUTDOWN)
+    def on_datachange_cpu(self, node, val, data):
 
-        future.set_result((node,val,data))
+        obj = uaClient.get_object("RB3")
 
-        return future
-
-
-    def got_result(self,future):
-
-        print(future.result())
-        self._task_temp.stop()
-
+        print("I-------------CPU-------------------------------")
+        print("Objeto: {} ".format(obj))
+        print(node,val,data)
+        print("F-----------------------------------------------")
 
 
 class HandleMethods(object):
@@ -118,38 +105,45 @@ class HandleMethods(object):
         pass
 
 
-class HandlerTemperature(object):
+class HandlerTemperature(HandlerEvents):
 
 
     def __init__(self,device):
 
-        self._device    = device
+        super().__init__(device)
+
+        self.logger     = logging.getLogger(__name__)
+
+
+    def datachange_notification(self, node, val, data):
+
+
+        method = getattr(self._device,"on_datachange_temperature")
+
+        HandlerEvents._event_loop.call_soon(method , node , val , data)
+        
+        print("Data change event - Temperature {}".format(val))
+
+    
+    def event_notification(self, event):
+        self.logger.info("Event - Temperature")
+
+
+class HandlerCPU(HandlerEvents):
+
+    def __init__(self,device):
+
+        super().__init__(device)
+
         self.logger     = logging.getLogger(__name__)
 
 
     def datachange_notification(self, node, val, data):
         
-        print("Temperature {} - New data change event\n".format(val))
-
-        self._device.temperature_notification(node,val,data)
-
-    
-    def event_notification(self, event):
-        print("Temperature - New event\n")
-
-
-class HandlerCPU(object):
-
-    def __init__(self,device):
-
-        self._device    = device
-        self.logger     = logging.getLogger(__name__)
-
-    def datachange_notification(self, node, val, data):
-        print("CPU {} - New data change event\n".format(val))
+        HandlerEvents._event_loop.call_soon(self._device.on_datachange_cpu,node, val, data)
+        
+        print("Data change event - CPU {}".format(val))
 
 
     def event_notification(self, event):
-        print("CPU-New event\n")
-
-
+        self.logger.info("Event - CPU")

@@ -27,6 +27,9 @@ from client.uaclient import uaClient
 
 class uaDevice(uaObject):
 
+    _event_loop = asyncio.get_event_loop()
+
+
     def __init__(self,parent,idx,name,event_loop ):
 
         # default node de objetos
@@ -35,16 +38,20 @@ class uaDevice(uaObject):
 
         super().__init__(parent,idx,name)
 
-        self.logger     = logging.getLogger(__name__)
-        self._event_loop= event_loop
+        self.logger             = logging.getLogger(__name__)
+        
+        if event_loop is not None:
+            uaDevice._event_loop    = event_loop
 
-        self._host      = uaObject(self.node,idx,uaTDevice.pHOST)
-        self._version   = uaObject(self.node,idx,uaTDevice.pVERSION)
-        self._model     = uaObject(self.node,idx,uaTDevice.pMODEL)
-        self._sn        = uaObject(self.node,idx,uaTDevice.pSN)
-        self.__task     = self.create_task()
-        # cria o worker para o dispositivo
-        #WorkerDevice(self)
+        self._host              = uaObject(self.node,idx,uaTDevice.pHOST)
+        self._version           = uaObject(self.node,idx,uaTDevice.pVERSION)
+        self._model             = uaObject(self.node,idx,uaTDevice.pMODEL)
+        self._sn                = uaObject(self.node,idx,uaTDevice.pSN)
+        self.__task             = self.create_periodic_update()
+
+    @property
+    def event_loop(self):
+        return uaDevice._event_loop
 
     @property
     def model(self):
@@ -71,25 +78,26 @@ class uaDevice(uaObject):
         self._version.value = value
 
 
-    async def loop_task(self):
+    async def update(self):
 
         while True:
             
-            await asyncio.sleep(10)
+            await asyncio.sleep(10,loop=uaDevice._event_loop)
             
             self.logger.warning("Worker não implementado")
 
-    def create_task(self):
+
+    def create_periodic_update(self):
 
         try:
-            task = asyncio.ensure_future(self.loop_task())
+            #task = asyncio.ensure_future(self.update(),loop=uaDevice._event_loop)
 
+            task = uaDevice._event_loop.create_task(self.update())
 
-            self.logger.info("Task do dispositivo criado com sucesso")
+            self.logger.info("Task-update do dispositivo criado com sucesso")
 
-        except IOError as e:
-            self.logger.error("Erro na criação da Task do dispositivo")
-            print(e)
+        except:
+            self.logger.error("Erro na criação do Task-update do dispositivo")
 
         return task
 
@@ -109,6 +117,20 @@ class uaDevice(uaObject):
         return  uaTDevice.create(parent,idx,handle)
 
 
+    def call_soon(self,callback, *args):
+        self._event_loop.call_soon(callback,args)
+
+
+    @staticmethod
+    def run_forever():
+
+        try:
+            uaDevice._event_loop.run_forever()
+        except (asyncio.CancelledError , KeyboardInterrupt ):
+            pass
+        finally:
+            uaDevice._event_loop.close()
+
 class HandleDevice(object):
     """
     Handle dos metodos do objeto OPC-UA
@@ -121,3 +143,26 @@ class HandleDevice(object):
     @uamethod
     def deinit(self,parent):
         print("deinit")
+
+
+class HandlerEvents(object):
+    """
+    Class generalista de handler events
+    """
+
+    _event_loop =  None
+
+
+    def __init__(self,device):
+
+        HandlerEvents._event_loop   = device.event_loop
+        self._device                = device
+        self.logger                 = logging.getLogger(__name__)
+
+
+    def datachange_notification(self, node, val, data):
+        self.logger.warn("Data change notification não implementado")
+
+    def event_notification(self, event):
+        self.logger.warn("Event não implementado")
+

@@ -79,7 +79,7 @@ class uaRaspBerry(uaDevice):
         self._harddisk.value = value
 
  
-    async def loop_task(self):        
+    async def update(self):        
         """
         Execuatado em loop infinito da thread
         """

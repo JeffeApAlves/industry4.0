@@ -32,6 +32,7 @@ from opc.uaobject import uaObject
 from opc.factory import Factory
 from server.uaserver import uaServer
 from devices.uatdevice import uaTDevice
+from devices.uadevice import uaDevice
 from misc.deploy import deploy_files
 from config.config import CONFIG 
 
@@ -46,9 +47,6 @@ except ImportError:
         code.interact(local=dict(globals(), **locals()))
 
 locale.setlocale(locale.LC_ALL, '')
-
-
-event_loop = asyncio.get_event_loop()
 
 @click.group()
 @click.option('-v','--verbose', type =click.Choice(['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']), default=None)
@@ -86,6 +84,9 @@ def deploy(devices,servers):
                 help="Propriedade a ser acessada")
 
 def write(name,prop,idx):
+    """
+    Faz a escrita de uma variavel
+    """
 
     # Conecta no servidor opc
     uaClient.connect()
@@ -113,7 +114,7 @@ def write(name,prop,idx):
 
 def read(name,prop,idx):
     """
-    Acessando uma variável através de path
+    Acessa uma variável indicado  em <name>
     """
 
     uaClient.connect()
@@ -149,21 +150,16 @@ def device(type,idx,name):
         
         class_type = CONFIG.choice_to_classe(type)
 
-        Factory.create_device(idx,name,class_type,event_loop)
+        Factory.create_device(idx,name,class_type)
 
-    except IOError as e:
-        print(e)
+    except:
+        #print(e)
         logger.error("Erro ao tentar criar se conectar no servidor opcua !")
         uaClient.disconnect()
 
     click.echo("Pressione [Ctrl+c] para interronper a execução\n")
 
-    try:
-        event_loop.run_forever()
-    except (asyncio.CancelledError , KeyboardInterrupt ):
-        pass
-    finally:
-        event_loop.close()
+    uaDevice.run_forever()
 
     uaClient.disconnect()
 
