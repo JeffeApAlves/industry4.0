@@ -80,7 +80,7 @@ class uaRaspBerry(uaDevice):
  
     async def update(self):        
         """
-        Execuatado em loop infinito da thread
+        Executado em loop infinito da thread
         """
         
         self.host =  get_ip_address("wlan0")

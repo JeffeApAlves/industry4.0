@@ -14,27 +14,27 @@ Dentro do diretório executar o comando
 git clone https://github.com/JeffeApAlves/industry4.0.git
 ```
 
-4. Instalar dependencias do projeto
-
-```shell    
-pip install reqirements.txt
-```
-
-5. Exportar a váriavel (OPCUA_PROJECT_HOME) indicando o home do projeto (onde foi feito o clone) Para isso adicionar a linha abaixo no arquivo .bashrc.
+4. Exportar a váriavel (OPCUA_PROJECT_HOME) indicando o home do projeto (onde foi feito o clone) Para isso adicionar a linha abaixo no arquivo .bashrc.
 
 ``` shell
 export OPCUA_PROJECT_HOME=$WORK_SPACE/industry40
 ```
 
-6. Carregar o script do projeto onde ficarão algumas definições , alias etc. Para isso adicionar a linha abaixo no arquivo .bashrc.
+5. Carregar o script do projeto onde ficarão algumas definições , alias etc. Para isso adicionar a linha abaixo no arquivo .bashrc.
 
 ``` shell
 $ source $OPCUA_PROJECT_HOME/tools/opcua.sh
 ```
 
-7. Criar um ambiente virtual python (opcua)
+6. Criar um ambiente virtual python (opcua)
 
 Seguir esse [Tutorial](https://jeffeapalves.github.io/edocs/python_enviroment.html)
+
+7. Instalar dependencias do projeto
+
+```shell    
+pip install -r reqirements.txt
+```
 
 8. Cirar um usuário de sistema (opcua)
 
